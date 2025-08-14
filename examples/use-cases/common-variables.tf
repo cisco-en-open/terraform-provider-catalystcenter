@@ -1,4 +1,7 @@
-# Common Variables for Cisco Catalyst Center Provider
+# Common Variables for Cisco Catalyst Center Terraform Provider
+# This file contains variables that are commonly used across multiple use cases.
+# Each use case can include this file to avoid duplicating common variable definitions.
+
 variable "catalyst_username" {
   description = "Cisco Catalyst Center username"
   type        = string

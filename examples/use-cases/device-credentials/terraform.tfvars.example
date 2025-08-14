@@ -1,5 +1,18 @@
-# Example terraform.tfvars file
+# Example terraform.tfvars file for device credentials use case
 # Copy this to terraform.tfvars and update with your actual values
+
+# Cisco Catalyst Center credentials
+catalyst_username = "admin"
+catalyst_password = "admin123"
+
+# Cisco Catalyst Center connection details  
+catalyst_base_url = "https://172.168.196.2"
+
+# Optional: Enable debugging (useful for troubleshooting)
+catalyst_debug = "false"
+
+# Optional: Disable SSL verification (useful for lab environments)
+catalyst_ssl_verify = "false"
 
 # Site IDs - Replace with actual site IDs from your Catalyst Center
 site_ids = {
