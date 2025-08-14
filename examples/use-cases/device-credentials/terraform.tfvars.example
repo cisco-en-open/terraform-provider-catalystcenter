@@ -1,0 +1,67 @@
+# Example terraform.tfvars file
+# Copy this to terraform.tfvars and update with your actual values
+
+# Site IDs - Replace with actual site IDs from your Catalyst Center
+site_ids = {
+  india     = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  bangalore = "yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
+}
+
+# CLI Credentials - Update with your preferred values
+cli_credentials = {
+  cli_1 = {
+    username        = "cli-user-1"
+    password        = "YourSecurePassword1!"
+    enable_password = "YourEnablePassword1!"
+  }
+  cli_2 = {
+    username        = "cli-user-2"
+    password        = "YourSecurePassword2!"
+    enable_password = "YourEnablePassword2!"
+  }
+}
+
+# SNMP v2c Credentials
+snmp_v2c_credentials = {
+  read = {
+    community = "YourReadCommunity"
+  }
+  write = {
+    community = "YourWriteCommunity"
+  }
+}
+
+# SNMP v3 Credentials
+snmp_v3_credentials = {
+  description      = "Production SNMPv3 Credential"
+  auth_password    = "YourAuthPassword123!"
+  auth_type        = "SHA"
+  snmp_mode        = "AUTHPRIV"
+  privacy_password = "YourPrivacyPassword123!"
+  privacy_type     = "AES128"
+  username         = "snmpv3-user"
+}
+
+# HTTPS Credentials
+https_credentials = {
+  read = {
+    description = "Production HTTPS Read"
+    username    = "https-read-user"
+    password    = "YourHTTPSReadPassword!"
+    port        = 443
+  }
+  write = {
+    description = "Production HTTPS Write"
+    username    = "https-write-user"
+    password    = "YourHTTPSWritePassword!"
+    port        = 443
+  }
+}
+
+# Netconf Credentials
+netconf_credentials = {
+  description = "Production Netconf"
+  username    = "netconf-user"
+  password    = "YourNetconfPassword!"
+  port        = 830
+}
