@@ -105,11 +105,37 @@ variable "application_telemetry" {
   }
 }
 
-# Global settings
-variable "enable_debug" {
-  description = "Enable debug mode for troubleshooting"
-  type        = bool
-  default     = true
+# Common Variables for Cisco Catalyst Center Provider
+variable "catalyst_username" {
+  description = "Cisco Catalyst Center username"
+  type        = string
+  default     = "admin"
+  sensitive   = true
+}
+
+variable "catalyst_password" {
+  description = "Cisco Catalyst Center password"
+  type        = string
+  default     = "admin123"
+  sensitive   = true
+}
+
+variable "catalyst_base_url" {
+  description = "Cisco Catalyst Center base URL, FQDN or IP"
+  type        = string
+  default     = "https://172.168.196.2"
+}
+
+variable "catalyst_debug" {
+  description = "Boolean to enable debugging"
+  type        = string
+  default     = "true"  # Default to true for provision workflows as they can be complex
+}
+
+variable "catalyst_ssl_verify" {
+  description = "Boolean to enable or disable SSL certificate verification"
+  type        = string
+  default     = "false"
 }
 
 variable "timeout_settings" {

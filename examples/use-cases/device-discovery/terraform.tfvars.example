@@ -1,6 +1,19 @@
 # Terraform configuration example for device discovery use case
 # Copy this file to terraform.tfvars and customize the values for your environment
 
+# Cisco Catalyst Center credentials
+catalyst_username = "admin"
+catalyst_password = "admin123"
+
+# Cisco Catalyst Center connection details  
+catalyst_base_url = "https://172.168.196.2"
+
+# Optional: Enable debugging (useful for troubleshooting)
+catalyst_debug = "false"
+
+# Optional: Disable SSL verification (useful for lab environments)
+catalyst_ssl_verify = "false"
+
 # Global Credential IDs
 # Replace these with actual global credential IDs from your Catalyst Center instance
 # You can find these IDs using the Catalyst Center UI or API

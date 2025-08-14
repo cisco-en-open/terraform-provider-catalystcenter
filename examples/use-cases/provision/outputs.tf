@@ -126,14 +126,14 @@ output "provision_test_results" {
     configuration_status = {
       site_configured         = length(var.site_name_hierarchy) > 0
       timeouts_configured     = var.timeout_settings.provision_timeout > 0 && var.timeout_settings.unprovision_timeout > 0
-      debug_enabled          = var.enable_debug
+      debug_enabled          = var.catalyst_debug
       provisioning_settings_applied = true
     }
     
     recommendations = compact([
       !var.wired_device_provision.enabled && !var.wireless_device_provision.enabled ? "Consider enabling at least one device provision workflow" : null,
       var.timeout_settings.provision_timeout < 300 ? "Consider increasing provision timeout for complex configurations" : null,
-      !var.enable_debug ? "Enable debug mode for troubleshooting if needed" : null
+      var.catalyst_debug == "false" ? "Enable debug mode for troubleshooting if needed" : null
     ])
   }
 }

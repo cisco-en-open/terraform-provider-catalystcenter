@@ -1,6 +1,19 @@
 # Terraform Variables Example for Provision Workflow
 # Copy this file to terraform.tfvars and update with your environment values
 
+# Cisco Catalyst Center credentials
+catalyst_username = "admin"
+catalyst_password = "admin123"
+
+# Cisco Catalyst Center connection details  
+catalyst_base_url = "https://172.168.196.2"
+
+# Optional: Enable debugging (useful for troubleshooting provision workflows)
+catalyst_debug = "true"
+
+# Optional: Disable SSL verification (useful for lab environments)
+catalyst_ssl_verify = "false"
+
 # Site hierarchy - Replace with your actual site structure
 site_name_hierarchy = "Global/USA/SAN JOSE/SJ_BLD23"
 
