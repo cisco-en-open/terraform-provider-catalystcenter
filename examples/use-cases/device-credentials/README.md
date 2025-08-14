@@ -34,10 +34,16 @@ The configuration demonstrates assigning credentials to different sites in the h
 
 ```
 device-credentials/
-├── main.tf       # Main Terraform configuration
-├── variables.tf  # Variable definitions
-├── outputs.tf    # Output definitions
-└── README.md     # This documentation
+├── main.tf                    # Main Terraform configuration (individual resources)
+├── variables.tf               # Variable definitions for main configuration
+├── outputs.tf                 # Output definitions for main configuration
+├── main-unified.tf            # Alternative unified approach using v2 resource
+├── variables-unified.tf       # Variables for unified approach
+├── validation.tf              # Validation configuration with data sources
+├── test-only.tf              # Testing configuration without site dependencies
+├── variables-test.tf         # Variables for test-only configuration
+├── terraform.tfvars.example  # Example values file
+└── README.md                 # This documentation
 ```
 
 ## Prerequisites
@@ -79,25 +85,57 @@ Ensure your Catalyst Center provider is properly configured with:
 
 ## Usage
 
-### Initialize Terraform
+There are several ways to use this configuration depending on your needs:
+
+### Option 1: Individual Credential Resources (Recommended)
+
+Use `main.tf` for the standard approach with individual credential resources:
+
 ```bash
 terraform init
+terraform plan -var-file="your-values.tfvars"
+terraform apply -var-file="your-values.tfvars"
 ```
 
-### Plan the Deployment
+### Option 2: Unified Credential Resource
+
+Use `main-unified.tf` for the unified v2 approach:
+
 ```bash
+# Rename or copy the files
+cp main-unified.tf main.tf
+cp variables-unified.tf variables.tf
+
+terraform init
 terraform plan
-```
-
-### Apply the Configuration
-```bash
 terraform apply
 ```
 
-### View Outputs
+### Option 3: Testing Only (No Site Dependencies)
+
+Use `test-only.tf` for testing credential creation without requiring existing sites:
+
 ```bash
-terraform output
+# Copy test files
+cp test-only.tf main.tf
+cp variables-test.tf variables.tf
+
+terraform init
+terraform plan
+terraform apply
 ```
+
+### Option 4: With Validation
+
+Include `validation.tf` alongside your main configuration to add validation checks:
+
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+
+The validation configuration will output test results showing whether all credentials were created successfully.
 
 ## Security Considerations
 
@@ -131,6 +169,34 @@ The provider is configured with `debug = "true"` to provide detailed logging for
 - [DNA Center Ansible Workflows - Device Credentials](https://github.com/DNACENSolutions/dnac_ansible_workflows/blob/main/workflows/device_credentials/README.md)
 - [Device Credentials Variables](https://github.com/DNACENSolutions/dnac_ansible_workflows/blob/main/workflows/device_credentials/vars/device_credentials_vars.yml)
 - [Terraform Provider Catalyst Center Documentation](https://registry.terraform.io/providers/cisco-en-programmability/catalystcenter/latest/docs)
+
+## Configuration Approaches
+
+This use case provides multiple approaches to demonstrate flexibility:
+
+### 1. Individual Resources (`main.tf`)
+- Uses separate resources for each credential type
+- Provides granular control and clear separation
+- Recommended for production environments
+- Example: `catalystcenter_global_credential_cli`, `catalystcenter_global_credential_snmpv3`
+
+### 2. Unified Resource (`main-unified.tf`)  
+- Uses the unified v2 resource (`catalystcenter_global_credential_v2`)
+- Creates all credential types in a single resource
+- More concise but less granular control
+- Good for simple deployments
+
+### 3. Test-Only (`test-only.tf`)
+- Focuses purely on credential creation
+- No site dependencies required
+- Perfect for CI/CD testing and validation
+- Includes comprehensive test outputs
+
+### 4. With Validation (`validation.tf`)
+- Adds data sources to validate created credentials
+- Provides test outputs and summaries  
+- Can be combined with any of the above approaches
+- Useful for automated testing and verification
 
 ## Support
 
