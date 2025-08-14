@@ -1,0 +1,106 @@
+# Terraform Variables Example for Provision Workflow
+# Copy this file to terraform.tfvars and update with your environment values
+
+# Site hierarchy - Replace with your actual site structure
+site_name_hierarchy = "Global/USA/SAN JOSE/SJ_BLD23"
+
+# Wired Device Provision Configuration
+# Enable/disable wired device provisioning and specify device IP
+wired_device_provision = {
+  enabled         = true
+  management_ip   = "204.1.2.5"          # Replace with your device IP
+  provisioning    = true                   # Set to false for site assignment only
+  force_provisioning = false               # Set to true for re-provisioning
+}
+
+# Site Assignment Only (without provisioning)
+# This assigns a device to a site without provisioning it
+site_assignment_only = {
+  enabled       = true
+  management_ip = "204.1.2.6"             # Replace with your device IP
+}
+
+# Device Re-provision Configuration
+# Enable this to re-provision an already provisioned device
+device_reprovision = {
+  enabled       = false                    # Set to true to enable re-provisioning
+  management_ip = "204.1.2.7"             # Replace with your device IP
+}
+
+# Wireless Device Provision Configuration
+# Configure wireless controller provisioning with AP locations
+wireless_device_provision = {
+  enabled       = false                    # Set to true to enable wireless provisioning
+  management_ip = "204.192.4.200"         # Replace with your wireless controller IP
+  managed_ap_locations = [                 # Replace with your AP site locations
+    "Global/USA/SAN JOSE/SJ_BLD23/FLOOR1",
+    "Global/USA/SAN JOSE/SJ_BLD23/FLOOR2",
+    "Global/USA/SAN JOSE/SJ_BLD23/FLOOR3",
+    "Global/USA/SAN JOSE/SJ_BLD23/FLOOR4"
+  ]
+  force_provisioning = false               # Set to true for re-provisioning
+}
+
+# Application Telemetry Configuration
+# Configure application telemetry for monitoring (manual setup required)
+application_telemetry = {
+  enabled = true                           # Set to false to disable telemetry configuration
+  device_ips = [
+    "204.1.2.1",                          # Replace with your device IPs
+    "204.1.2.3"
+  ]
+  wired_config = {
+    telemetry = "enable"                   # or "disable"
+  }
+  wireless_config = {
+    telemetry          = "enable"          # or "disable"
+    wlan_mode          = "LOCAL"           # Wireless LAN mode
+    include_guest_ssid = true              # Include guest SSID in telemetry
+  }
+}
+
+# Global Settings
+enable_debug = true                        # Set to false to disable debug output
+
+# Timeout Settings (in seconds)
+timeout_settings = {
+  provision_timeout   = 600                # 10 minutes - adjust based on your environment
+  unprovision_timeout = 300                # 5 minutes - adjust based on your environment
+}
+
+# ==============================================================================
+# INSTRUCTIONS FOR CUSTOMIZATION:
+# ==============================================================================
+#
+# 1. REQUIRED CHANGES:
+#    - Update site_name_hierarchy with your actual site hierarchy
+#    - Replace all management_ip values with your actual device IPs
+#    - Update managed_ap_locations with your actual AP site locations
+#
+# 2. WORKFLOW SELECTION:
+#    - Set enabled = true for the workflows you want to test
+#    - Set enabled = false for workflows you don't need
+#    - At least one workflow must be enabled
+#
+# 3. DEVICE REQUIREMENTS:
+#    - Ensure all specified devices exist in your Catalyst Center inventory
+#    - Devices should be discovered and reachable
+#    - Site hierarchy must exist in your Catalyst Center
+#
+# 4. NETWORK ACCESS:
+#    - Ensure Terraform can reach your Catalyst Center instance
+#    - Verify authentication credentials are properly configured
+#    - Check that all device IPs are accessible from Catalyst Center
+#
+# 5. TESTING RECOMMENDATIONS:
+#    - Start with site_assignment_only = true to test basic connectivity
+#    - Enable wired_device_provision for basic provisioning test
+#    - Enable wireless_device_provision only if you have wireless controllers
+#    - Use device_reprovision carefully on production devices
+#
+# 6. TROUBLESHOOTING:
+#    - Keep enable_debug = true during initial testing
+#    - Increase timeout values if operations take longer in your environment
+#    - Check Catalyst Center logs for detailed error information
+#
+# ==============================================================================
