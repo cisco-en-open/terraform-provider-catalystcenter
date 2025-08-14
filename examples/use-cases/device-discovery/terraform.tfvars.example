@@ -1,0 +1,141 @@
+# Terraform configuration example for device discovery use case
+# Copy this file to terraform.tfvars and customize the values for your environment
+
+# Global Credential IDs
+# Replace these with actual global credential IDs from your Catalyst Center instance
+# You can find these IDs using the Catalyst Center UI or API
+global_credential_id_list = [
+  "your-cli-credential-id-here",
+  "your-snmp-credential-id-here", 
+  "your-https-credential-id-here"
+]
+
+# CDP Discovery Configuration
+cdp_discovery = {
+  discovery_name   = "CDP Based Discovery Lab"
+  discovery_type   = "CDP"
+  ip_address_list  = ["192.168.1.1"]  # Replace with your seed IP
+  protocol_order   = "ssh"
+  retry           = 2
+  cdp_level       = 3
+  net_conf_port   = "830"
+}
+
+# Single IP Discovery 1 Configuration
+single_ip_discovery_1 = {
+  discovery_name   = "Single IP Discovery Lab 1"
+  discovery_type   = "Single"
+  ip_address_list  = ["192.168.1.10"]  # Replace with your target IP
+  protocol_order   = "ssh"
+  retry           = 2
+  net_conf_port   = "830"
+  http_read_credential = {
+    username = "admin"        # Replace with your HTTP username
+    password = "password123"  # Replace with your HTTP password
+    port = 443
+    secure = true
+  }
+  http_write_credential = {
+    username = "admin"        # Replace with your HTTP username
+    password = "password123"  # Replace with your HTTP password
+    port = 443
+    secure = true
+  }
+}
+
+# Single IP Discovery 2 Configuration
+single_ip_discovery_2 = {
+  discovery_name   = "Single IP Discovery Lab 2"
+  discovery_type   = "Single"
+  ip_address_list  = ["192.168.1.11"]  # Replace with your target IP
+  protocol_order   = "ssh"
+  retry           = 2
+  net_conf_port   = "830"
+  snmp_v3_credential = {
+    description = "SNMPv3 Lab Credentials"
+    username = "snmpuser"      # Replace with your SNMPv3 username
+    snmp_mode = "AUTHPRIV"
+    auth_password = "authpass123"     # Replace with your auth password
+    auth_type = "SHA"
+    privacy_type = "AES128"
+    privacy_password = "privpass123"  # Replace with your privacy password
+  }
+  http_read_credential = {
+    username = "admin"        # Replace with your HTTP username
+    password = "password123"  # Replace with your HTTP password
+    port = 443
+    secure = true
+  }
+  http_write_credential = {
+    username = "admin"        # Replace with your HTTP username
+    password = "password123"  # Replace with your HTTP password
+    port = 443
+    secure = true
+  }
+}
+
+# Range IP Discovery Configuration
+range_ip_discovery = {
+  discovery_name   = "Range IP Discovery Lab"
+  discovery_type   = "Range"
+  ip_address_list  = ["192.168.1.20-192.168.1.30"]  # Replace with your IP range
+  protocol_order   = "ssh"
+  retry           = 2
+  net_conf_port   = "830"
+  snmp_v3_credential = {
+    description = "SNMPv3 Range Discovery"
+    username = "snmpuser"      # Replace with your SNMPv3 username
+    snmp_mode = "AUTHPRIV"
+    auth_password = "authpass123"     # Replace with your auth password
+    auth_type = "SHA"
+    privacy_type = "AES128"
+    privacy_password = "privpass123"  # Replace with your privacy password
+  }
+  http_read_credential = {
+    username = "admin"        # Replace with your HTTP username
+    password = "password123"  # Replace with your HTTP password
+    port = 443
+    secure = true
+  }
+  http_write_credential = {
+    username = "admin"        # Replace with your HTTP username
+    password = "password123"  # Replace with your HTTP password
+    port = 443
+    secure = true
+  }
+}
+
+# Multi Range IP Discovery Configuration
+multi_range_ip_discovery = {
+  discovery_name   = "Multi Range Discovery Lab"
+  discovery_type   = "Multi Range"
+  ip_address_list  = [
+    "192.168.1.40-192.168.1.45",    # Replace with your IP ranges
+    "192.168.2.10-192.168.2.15"
+  ]
+  protocol_order   = "ssh"
+  retry           = 2
+  timeout         = 30
+  net_conf_port   = "830"
+  snmp_v3_credential = {
+    description = "SNMPv3 Multi Range Discovery"
+    username = "snmpuser"      # Replace with your SNMPv3 username
+    snmp_mode = "AUTHPRIV"
+    auth_password = "authpass123"     # Replace with your auth password
+    auth_type = "SHA"
+    privacy_type = "AES128"
+    privacy_password = "privpass123"  # Replace with your privacy password
+  }
+  http_read_credential = {
+    username = "admin"        # Replace with your HTTP username
+    password = "password123"  # Replace with your HTTP password
+    port = 443
+    secure = true
+  }
+  http_write_credential = {
+    username = "admin"        # Replace with your HTTP username
+    password = "password123"  # Replace with your HTTP password
+    port = 443
+    secure = true
+  }
+}
