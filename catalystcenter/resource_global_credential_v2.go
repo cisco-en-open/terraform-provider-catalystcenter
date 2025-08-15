@@ -588,7 +588,8 @@ Request Body for more information.
 							Description: `id path parameter. Global Credential id
 `,
 							Type:     schema.TypeString,
-							Required: true,
+							Optional: true,
+							Computed: true,
 						},
 						"snmp_v2c_read": &schema.Schema{
 							Type:     schema.TypeList,
