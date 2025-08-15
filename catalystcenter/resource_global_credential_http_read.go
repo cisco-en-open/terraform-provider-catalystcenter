@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"log"
@@ -498,10 +499,20 @@ func searchDiscoveryGetGlobalCredentialsHttpRead(m interface{}, queryParams cata
 	var foundItem *catalystcentersdkgo.ResponseDiscoveryGetGlobalCredentialsResponse
 	var ite *catalystcentersdkgo.ResponseDiscoveryGetGlobalCredentials
 	queryParams.CredentialSubType = "HTTP_READ"
+
+	// First, try the normal SDK call
 	ite, _, err = client.Discovery.GetGlobalCredentials(&queryParams)
 	if err != nil {
+		// Check if this is the secure field JSON unmarshal error
+		if strings.Contains(err.Error(), "cannot unmarshal bool into Go struct field") && strings.Contains(err.Error(), "secure") {
+			// Log the error but continue with a limited search approach
+			log.Printf("[DEBUG] Known secure field JSON unmarshal error for HTTP credentials: %v", err)
+			// For now, return the error but with a more descriptive message
+			return foundItem, fmt.Errorf("HTTP credential secure field data type mismatch (API returns boolean, expected string): %v", err)
+		}
 		return foundItem, err
 	}
+
 	items := ite
 	if items == nil {
 		return foundItem, err

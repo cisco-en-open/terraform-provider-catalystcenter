@@ -45,6 +45,17 @@ func resourceGlobalCredentialCli() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 
+						"auth_password": &schema.Schema{
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Computed:  true,
+						},
+
+						"auth_type": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
 						"comments": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
@@ -58,6 +69,12 @@ func resourceGlobalCredentialCli() *schema.Resource {
 						"description": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
+						},
+
+						"enable_password": &schema.Schema{
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Computed:  true,
 						},
 
 						"id": &schema.Schema{
@@ -74,31 +91,55 @@ func resourceGlobalCredentialCli() *schema.Resource {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"write_community": &schema.Schema{
+
+						"netconf_port": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"username": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+
+						"password": &schema.Schema{
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Computed:  true,
 						},
-						"secure": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
+
 						"port": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+
+						"privacy_password": &schema.Schema{
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Computed:  true,
+						},
+
+						"privacy_type": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
 						"read_community": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"password": &schema.Schema{
+
+						"secure": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"netconf_port": &schema.Schema{
+
+						"snmp_mode": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
+						"username": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
+						"write_community": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
 						},
