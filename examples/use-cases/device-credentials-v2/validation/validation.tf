@@ -2,14 +2,23 @@ terraform {
   required_providers {
     catalystcenter = {
       version = "1.2.0-beta"
-      source  = "hashicorp.com/edu/catalystcenter"
-      # "hashicorp.com/edu/catalystcenter" is the local built source change to "cisco-en-programmability/catalystcenter" to use downloaded version from registry
+      source  = "cisco-en-programmability/catalystcenter"
     }
   }
 }
 
+# Configure provider with your Cisco Catalyst Center SDK credentials
 provider "catalystcenter" {
-  debug = "true"
+  # Cisco Catalyst Center user name
+  username = var.catalyst_username
+  # Cisco Catalyst Center password
+  password = var.catalyst_password
+  # Cisco Catalyst Center base URL, FQDN or IP
+  base_url = var.catalyst_base_url
+  # Boolean to enable debugging
+  debug = var.catalyst_debug
+  # Boolean to enable or disable SSL certificate verification
+  ssl_verify = var.catalyst_ssl_verify
 }
 
 # Data source to validate CLI credentials exist
@@ -65,16 +74,16 @@ data "catalystcenter_global_credential" "netconf_credentials" {
 }
 
 # Data source to validate site credential assignments
-data "catalystcenter_sites_device_credentials" "india_site_validation" {
+data "catalystcenter_sites_device_credentials" "usa_site_validation" {
   provider = catalystcenter
-  site_id  = var.site_ids.india
-  depends_on = [catalystcenter_sites_device_credentials.india_site_credentials]
+  id  = var.site_ids.usa
+  depends_on = [catalystcenter_sites_device_credentials.usa_site_credentials]
 }
 
-data "catalystcenter_sites_device_credentials" "bangalore_site_validation" {
+data "catalystcenter_sites_device_credentials" "san_jose_site_validation" {
   provider = catalystcenter
-  site_id  = var.site_ids.bangalore
-  depends_on = [catalystcenter_sites_device_credentials.bangalore_site_credentials]
+  id  = var.site_ids.san_jose
+  depends_on = [catalystcenter_sites_device_credentials.san_jose_site_credentials]
 }
 
 # Validation outputs - these will show if the credentials were created successfully
@@ -114,23 +123,23 @@ output "validation_netconf_credentials_count" {
 }
 
 # Site assignment validation outputs
-output "validation_india_site_has_credentials" {
-  description = "Whether India site has credential assignments"
+output "validation_usa_site_has_credentials" {
+  description = "Whether USA site has credential assignments"
   value = {
-    has_cli_credentials     = length(data.catalystcenter_sites_device_credentials.india_site_validation.item[0].cli_credentials_id) > 0
-    has_snmpv3_credentials  = length(data.catalystcenter_sites_device_credentials.india_site_validation.item[0].snmpv3_credentials_id) > 0
-    has_http_read_credentials = length(data.catalystcenter_sites_device_credentials.india_site_validation.item[0].http_read_credentials_id) > 0
-    has_http_write_credentials = length(data.catalystcenter_sites_device_credentials.india_site_validation.item[0].http_write_credentials_id) > 0
+    has_cli_credentials     = length(data.catalystcenter_sites_device_credentials.usa_site_validation.item[0].cli_credentials_id) > 0
+    has_snmpv3_credentials  = length(data.catalystcenter_sites_device_credentials.usa_site_validation.item[0].snmpv3_credentials_id) > 0
+    has_http_read_credentials = length(data.catalystcenter_sites_device_credentials.usa_site_validation.item[0].http_read_credentials_id) > 0
+    has_http_write_credentials = length(data.catalystcenter_sites_device_credentials.usa_site_validation.item[0].http_write_credentials_id) > 0
   }
 }
 
-output "validation_bangalore_site_has_credentials" {
-  description = "Whether Bangalore site has credential assignments"
+output "validation_san_jose_site_has_credentials" {
+  description = "Whether San Jose site has credential assignments"
   value = {
-    has_cli_credentials     = length(data.catalystcenter_sites_device_credentials.bangalore_site_validation.item[0].cli_credentials_id) > 0
-    has_snmpv3_credentials  = length(data.catalystcenter_sites_device_credentials.bangalore_site_validation.item[0].snmpv3_credentials_id) > 0
-    has_http_read_credentials = length(data.catalystcenter_sites_device_credentials.bangalore_site_validation.item[0].http_read_credentials_id) > 0
-    has_http_write_credentials = length(data.catalystcenter_sites_device_credentials.bangalore_site_validation.item[0].http_write_credentials_id) > 0
+    has_cli_credentials     = length(data.catalystcenter_sites_device_credentials.san_jose_site_validation.item[0].cli_credentials_id) > 0
+    has_snmpv3_credentials  = length(data.catalystcenter_sites_device_credentials.san_jose_site_validation.item[0].snmpv3_credentials_id) > 0
+    has_http_read_credentials = length(data.catalystcenter_sites_device_credentials.san_jose_site_validation.item[0].http_read_credentials_id) > 0
+    has_http_write_credentials = length(data.catalystcenter_sites_device_credentials.san_jose_site_validation.item[0].http_write_credentials_id) > 0
   }
 }
 

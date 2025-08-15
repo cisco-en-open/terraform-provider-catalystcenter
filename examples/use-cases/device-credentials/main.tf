@@ -2,14 +2,23 @@ terraform {
   required_providers {
     catalystcenter = {
       version = "1.2.0-beta"
-      source  = "hashicorp.com/edu/catalystcenter"
-      # "hashicorp.com/edu/catalystcenter" is the local built source change to "cisco-en-programmability/catalystcenter" to use downloaded version from registry
+      source  = "cisco-en-programmability/catalystcenter"
     }
   }
 }
 
+# Configure provider with your Cisco Catalyst Center SDK credentials
 provider "catalystcenter" {
-  debug = "true"
+  # Cisco Catalyst Center user name
+  username = var.catalyst_username
+  # Cisco Catalyst Center password
+  password = var.catalyst_password
+  # Cisco Catalyst Center base URL, FQDN or IP
+  base_url = var.catalyst_base_url
+  # Boolean to enable debugging
+  debug = var.catalyst_debug
+  # Boolean to enable or disable SSL certificate verification
+  ssl_verify = var.catalyst_ssl_verify
 }
 
 # CLI Credential 1
@@ -85,7 +94,7 @@ resource "catalystcenter_global_credential_http_read" "https_read_sample_1" {
     description     = var.https_credentials.read.description
     password        = var.https_credentials.read.password
     port            = var.https_credentials.read.port
-    secure          = "Yes"
+    secure          = "true"
     username        = var.https_credentials.read.username
   }
 }
@@ -99,7 +108,7 @@ resource "catalystcenter_global_credential_http_write" "https_write_sample_1" {
     description     = var.https_credentials.write.description
     password        = var.https_credentials.write.password
     port            = var.https_credentials.write.port
-    secure          = "Yes"
+    secure          = "true"
     username        = var.https_credentials.write.username
   }
 }
@@ -112,17 +121,15 @@ resource "catalystcenter_global_credential_netconf" "netconf_sample_1" {
     credential_type = "GLOBAL"
     description     = var.netconf_credentials.description
     netconf_port    = var.netconf_credentials.port
-    password        = var.netconf_credentials.password
-    username        = var.netconf_credentials.username
   }
 }
 
-# Site assignment - Global/India site
-resource "catalystcenter_sites_device_credentials" "india_site_credentials" {
+# Site assignment - Global/USA site
+resource "catalystcenter_sites_device_credentials" "usa_site_credentials" {
   provider = catalystcenter
   
   parameters {
-    id = var.site_ids.india
+    id = var.site_ids.usa
     
     cli_credentials_id {
       credentials_id = catalystcenter_global_credential_cli.cli_sample_1.item[0].id
@@ -142,12 +149,12 @@ resource "catalystcenter_sites_device_credentials" "india_site_credentials" {
   }
 }
 
-# Site assignment - Global/India/Bangalore site
-resource "catalystcenter_sites_device_credentials" "bangalore_site_credentials" {
+# Site assignment - Global/USA/SAN JOSE site
+resource "catalystcenter_sites_device_credentials" "san_jose_site_credentials" {
   provider = catalystcenter
   
   parameters {
-    id = var.site_ids.bangalore
+    id = var.site_ids.san_jose
     
     cli_credentials_id {
       credentials_id = catalystcenter_global_credential_cli.cli_sample_1.item[0].id

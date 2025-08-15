@@ -113,14 +113,10 @@ variable "netconf_credentials" {
   description = "Netconf credentials for device configuration"
   type = object({
     description = string
-    username    = string
-    password    = string
     port        = number
   })
   default = {
     description = "Netconf Sample 1"
-    username    = "admin"
-    password    = "netconf123!"
     port        = 830
   }
   sensitive = true
@@ -130,12 +126,12 @@ variable "netconf_credentials" {
 variable "site_ids" {
   description = "Site IDs for credential assignment"
   type = object({
-    india     = string
-    bangalore = string
+    usa     = string
+    san_jose = string
   })
   # These would need to be provided based on actual site hierarchy
   default = {
-    india     = "site-id-india-placeholder"
-    bangalore = "site-id-bangalore-placeholder"
+    usa     = "7bbc9e91-db57-4911-b13f-079bca7ec430"
+    san_jose = "75041b2a-27a5-4af7-93cd-3ac4ffef8035"
   }
 }

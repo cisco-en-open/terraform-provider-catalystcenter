@@ -5,8 +5,8 @@ variable "site_ids_list" {
   description = "List of site IDs for credential assignment"
   type        = list(string)
   default     = [
-    "site-id-india-placeholder",
-    "site-id-bangalore-placeholder"
+    "7bbc9e91-db57-4911-b13f-079bca7ec430",
+    "75041b2a-27a5-4af7-93cd-3ac4ffef8035"
   ]
 }
 

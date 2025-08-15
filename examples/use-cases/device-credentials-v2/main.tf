@@ -2,19 +2,28 @@ terraform {
   required_providers {
     catalystcenter = {
       version = "1.2.0-beta"
-      source  = "hashicorp.com/edu/catalystcenter"
-      # "hashicorp.com/edu/catalystcenter" is the local built source change to "cisco-en-programmability/catalystcenter" to use downloaded version from registry
+      source  = "cisco-en-programmability/catalystcenter"
     }
   }
 }
 
+# Configure provider with your Cisco Catalyst Center SDK credentials
 provider "catalystcenter" {
-  debug = "true"
+  # Cisco Catalyst Center user name
+  username = var.catalyst_username
+  # Cisco Catalyst Center password
+  password = var.catalyst_password
+  # Cisco Catalyst Center base URL, FQDN or IP
+  base_url = var.catalyst_base_url
+  # Boolean to enable debugging
+  debug = var.catalyst_debug
+  # Boolean to enable or disable SSL certificate verification
+  ssl_verify = var.catalyst_ssl_verify
 }
 
-# Alternative approach using the unified credential resource
+# Alternative approach using the credentials v2 resource
 # This creates all credential types in a single resource
-resource "catalystcenter_global_credential_v2" "unified_credentials" {
+resource "catalystcenter_global_credential_v2" "credentials_v2" {
   provider = catalystcenter
   
   parameters {
@@ -64,11 +73,11 @@ resource "catalystcenter_global_credential_v2" "unified_credentials" {
 # Data source to retrieve credentials for site assignment
 data "catalystcenter_global_credential_v2" "created_credentials" {
   provider = catalystcenter
-  depends_on = [catalystcenter_global_credential_v2.unified_credentials]
+  depends_on = [catalystcenter_global_credential_v2.credentials_v2]
 }
 
-# Site assignment using the unified approach
-resource "catalystcenter_sites_device_credentials" "unified_site_assignment" {
+# Site assignment using the credentials v2 approach
+resource "catalystcenter_sites_device_credentials" "site_assignment_v2" {
   count    = length(var.site_ids_list)
   provider = catalystcenter
   
@@ -76,27 +85,27 @@ resource "catalystcenter_sites_device_credentials" "unified_site_assignment" {
     id = var.site_ids_list[count.index]
     
     cli_credentials_id {
-      credentials_id = catalystcenter_global_credential_v2.unified_credentials.item[0].cli_credential[0].id
+      credentials_id = catalystcenter_global_credential_v2.credentials_v2.item[0].cli_credential[0].id
     }
     
     snmpv3_credentials_id {
-      credentials_id = catalystcenter_global_credential_v2.unified_credentials.item[0].snmp_v3[0].id
+      credentials_id = catalystcenter_global_credential_v2.credentials_v2.item[0].snmp_v3[0].id
     }
     
     http_read_credentials_id {
-      credentials_id = catalystcenter_global_credential_v2.unified_credentials.item[0].https_read[0].id
+      credentials_id = catalystcenter_global_credential_v2.credentials_v2.item[0].https_read[0].id
     }
     
     http_write_credentials_id {
-      credentials_id = catalystcenter_global_credential_v2.unified_credentials.item[0].https_write[0].id
+      credentials_id = catalystcenter_global_credential_v2.credentials_v2.item[0].https_write[0].id
     }
     
     snmpv2c_read_credentials_id {
-      credentials_id = catalystcenter_global_credential_v2.unified_credentials.item[0].snmp_v2c_read[0].id
+      credentials_id = catalystcenter_global_credential_v2.credentials_v2.item[0].snmp_v2c_read[0].id
     }
     
     snmpv2c_write_credentials_id {
-      credentials_id = catalystcenter_global_credential_v2.unified_credentials.item[0].snmp_v2c_write[0].id
+      credentials_id = catalystcenter_global_credential_v2.credentials_v2.item[0].snmp_v2c_write[0].id
     }
   }
 }
