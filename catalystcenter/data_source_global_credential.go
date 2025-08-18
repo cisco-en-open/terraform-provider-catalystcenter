@@ -338,7 +338,7 @@ func flattenDiscoveryGetGlobalCredentialsItems(items *[]catalystcentersdkgo.Resp
 	for _, item := range *items {
 		respItem := make(map[string]interface{})
 
-		// Common fields for all credential types
+		// Always set common fields
 		respItem["comments"] = item.Comments
 		respItem["credential_type"] = item.CredentialType
 		respItem["description"] = item.Description
@@ -346,118 +346,45 @@ func flattenDiscoveryGetGlobalCredentialsItems(items *[]catalystcentersdkgo.Resp
 		respItem["instance_tenant_id"] = item.InstanceTenantID
 		respItem["instance_uuid"] = item.InstanceUUID
 
-		// Determine credential type and set type-specific fields
-		credType := item.CredentialType
-
-		switch credType {
-		case "CLI":
-			// CLI-specific fields
-			if item.Username != "" {
-				respItem["username"] = item.Username
-			}
-			if item.Password != "" {
-				respItem["password"] = item.Password
-			}
-			if item.EnablePassword != "" {
-				respItem["enable_password"] = item.EnablePassword
-			}
-
-		case "SNMPV3":
-			// SNMPv3-specific fields
-			if item.Username != "" {
-				respItem["username"] = item.Username
-			}
-			if item.AuthPassword != "" {
-				respItem["auth_password"] = item.AuthPassword
-			}
-			if item.AuthType != "" {
-				respItem["auth_type"] = item.AuthType
-			}
-			if item.PrivacyPassword != "" {
-				respItem["privacy_password"] = item.PrivacyPassword
-			}
-			if item.PrivacyType != "" {
-				respItem["privacy_type"] = item.PrivacyType
-			}
-			if item.SNMPMode != "" {
-				respItem["snmp_mode"] = item.SNMPMode
-			}
-
-		case "SNMPV2_READ_COMMUNITY":
-			// SNMPv2 read community specific fields
-			if item.ReadCommunity != "" {
-				respItem["read_community"] = item.ReadCommunity
-			}
-
-		case "SNMPV2_WRITE_COMMUNITY":
-			// SNMPv2 write community specific fields
-			if item.WriteCommunity != "" {
-				respItem["write_community"] = item.WriteCommunity
-			}
-
-		case "HTTP_READ", "HTTP_WRITE":
-			// HTTP-specific fields
-			if item.Username != "" {
-				respItem["username"] = item.Username
-			}
-			if item.Password != "" {
-				respItem["password"] = item.Password
-			}
-			if item.Port != nil && *item.Port != 0 {
-				respItem["port"] = item.Port
-			}
-			// Handle secure field conversion
-			if item.Secure != "" {
-				respItem["secure"] = item.Secure
-			}
-
-		case "NETCONF":
-			// Netconf-specific fields
-			if item.NetconfPort != "" {
-				respItem["netconf_port"] = item.NetconfPort
-			}
-
-		default:
-			// For unknown types, include all non-empty fields safely
-			if item.Username != "" {
-				respItem["username"] = item.Username
-			}
-			if item.Password != "" {
-				respItem["password"] = item.Password
-			}
-			if item.EnablePassword != "" {
-				respItem["enable_password"] = item.EnablePassword
-			}
-			if item.NetconfPort != "" {
-				respItem["netconf_port"] = item.NetconfPort
-			}
-			if item.ReadCommunity != "" {
-				respItem["read_community"] = item.ReadCommunity
-			}
-			if item.WriteCommunity != "" {
-				respItem["write_community"] = item.WriteCommunity
-			}
-			if item.AuthPassword != "" {
-				respItem["auth_password"] = item.AuthPassword
-			}
-			if item.AuthType != "" {
-				respItem["auth_type"] = item.AuthType
-			}
-			if item.PrivacyPassword != "" {
-				respItem["privacy_password"] = item.PrivacyPassword
-			}
-			if item.PrivacyType != "" {
-				respItem["privacy_type"] = item.PrivacyType
-			}
-			if item.SNMPMode != "" {
-				respItem["snmp_mode"] = item.SNMPMode
-			}
-			if item.Secure != "" {
-				respItem["secure"] = item.Secure
-			}
-			if item.Port != nil && *item.Port != 0 {
-				respItem["port"] = item.Port
-			}
+		// Set optional fields only if they are non-empty to avoid type issues
+		if item.Username != "" {
+			respItem["username"] = item.Username
+		}
+		if item.Password != "" {
+			respItem["password"] = item.Password
+		}
+		if item.EnablePassword != "" {
+			respItem["enable_password"] = item.EnablePassword
+		}
+		if item.NetconfPort != "" {
+			respItem["netconf_port"] = item.NetconfPort
+		}
+		if item.ReadCommunity != "" {
+			respItem["read_community"] = item.ReadCommunity
+		}
+		if item.WriteCommunity != "" {
+			respItem["write_community"] = item.WriteCommunity
+		}
+		if item.AuthPassword != "" {
+			respItem["auth_password"] = item.AuthPassword
+		}
+		if item.AuthType != "" {
+			respItem["auth_type"] = item.AuthType
+		}
+		if item.PrivacyPassword != "" {
+			respItem["privacy_password"] = item.PrivacyPassword
+		}
+		if item.PrivacyType != "" {
+			respItem["privacy_type"] = item.PrivacyType
+		}
+		if item.SNMPMode != "" {
+			respItem["snmp_mode"] = item.SNMPMode
+		}
+		if item.Secure != "" {
+			respItem["secure"] = item.Secure
+		}
+		if item.Port != nil && *item.Port != 0 {
+			respItem["port"] = item.Port
 		}
 
 		respItems = append(respItems, respItem)
