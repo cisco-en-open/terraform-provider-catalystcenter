@@ -5,9 +5,9 @@ variable "global_credential_id_list" {
   type        = list(string)
   default = [
     # These are placeholder IDs - replace with actual global credential IDs from your Catalyst Center
-    "credential-id-cli-1",
-    "credential-id-snmp-1",
-    "credential-id-https-1"
+    "username:=wlcaccess",
+    "username:=wlcaccess",
+    "username:=wlcaccess"
   ]
 }
 
@@ -26,7 +26,7 @@ variable "cdp_discovery" {
   default = {
     discovery_name   = "CDP Based Discovery1"
     discovery_type   = "CDP"
-    ip_address_list  = ["204.101.16.1"]
+    ip_address_list  = ["204.101.96.3"]
     protocol_order   = "ssh"
     retry           = 2
     cdp_level       = 3
@@ -60,7 +60,7 @@ variable "single_ip_discovery_1" {
   default = {
     discovery_name   = "Single IP Discovery11"
     discovery_type   = "Single"
-    ip_address_list  = ["204.101.16.1"]
+    ip_address_list  = ["204.101.96.3"]
     protocol_order   = "ssh"
     retry           = 2
     net_conf_port   = "830"
@@ -115,7 +115,7 @@ variable "single_ip_discovery_2" {
   default = {
     discovery_name   = "Single IP Discovery12"
     discovery_type   = "Single"
-    ip_address_list  = ["204.101.16.2"]
+    ip_address_list  = ["204.101.96.3"]
     protocol_order   = "ssh"
     retry           = 2
     net_conf_port   = "830"
@@ -179,7 +179,7 @@ variable "range_ip_discovery" {
   default = {
     discovery_name   = "Range IP Discovery11"
     discovery_type   = "Range"
-    ip_address_list  = ["204.101.16.2-204.101.16.2"]
+    ip_address_list  = ["204.101.96.1-204.101.96.3"]
     protocol_order   = "ssh"
     retry           = 2
     net_conf_port   = "830"
@@ -244,7 +244,7 @@ variable "multi_range_ip_discovery" {
   default = {
     discovery_name   = "Multi Range Discovery 11"
     discovery_type   = "Multi Range"
-    ip_address_list  = ["204.101.16.2-204.101.16.3", "204.101.16.4-204.101.16.4"]
+    ip_address_list  = ["204.101.96.1-204.101.96.3", "204.101.16.4-204.101.16.4"]
     protocol_order   = "ssh"
     retry           = 2
     timeout         = 30
