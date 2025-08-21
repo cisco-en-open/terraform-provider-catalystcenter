@@ -11,13 +11,22 @@ terraform {
     catalystcenter = {
       version = "1.2.0-beta"
       source  = "cisco-en-programmability/catalystcenter"
-      # Change to "cisco-en-programmability/catalystcenter" to use downloaded version from registry
     }
   }
 }
 
+# Configure provider with your Cisco Catalyst Center SDK credentials
 provider "catalystcenter" {
-  debug = var.enable_debug
+
+  username = var.catalyst_username
+
+  password = var.catalyst_password
+
+  base_url = var.catalyst_base_url
+
+  debug = var.catalyst_debug
+
+  ssl_verify = var.catalyst_ssl_verify
 }
 
 # Data sources to get site and device information
@@ -49,7 +58,7 @@ resource "catalystcenter_sda_provision_devices" "site_assignment" {
 # Data source to get device by IP for site assignment
 data "catalystcenter_network_device_by_ip" "site_assign" {
   count = var.site_assignment_only.enabled ? 1 : 0
-  ip    = var.site_assignment_only.management_ip
+  ip_address    = var.site_assignment_only.management_ip
 }
 
 # 2. Device Provision (assign device to site and provision)
@@ -63,18 +72,12 @@ resource "catalystcenter_sda_provision_devices" "wired_provision" {
       site_id          = data.catalystcenter_sites.target_site.items[0].id
     }
   }
-
-  timeouts {
-    create = "${var.timeout_settings.provision_timeout}s"
-    update = "${var.timeout_settings.provision_timeout}s"
-    delete = "${var.timeout_settings.unprovision_timeout}s"
-  }
 }
 
 # Data source to get wired device by IP
 data "catalystcenter_network_device_by_ip" "wired_device" {
   count = var.wired_device_provision.enabled ? 1 : 0
-  ip    = var.wired_device_provision.management_ip
+  ip_address    = var.wired_device_provision.management_ip
 }
 
 # 3. Device Re-provision
@@ -93,21 +96,15 @@ resource "catalystcenter_sda_provision_devices" "device_reprovision" {
   lifecycle {
     replace_triggered_by = [
       # This ensures the resource is recreated for re-provisioning
-      var.device_reprovision.enabled
+      terraform_data.validation.id
     ]
-  }
-
-  timeouts {
-    create = "${var.timeout_settings.provision_timeout}s"
-    update = "${var.timeout_settings.provision_timeout}s"
-    delete = "${var.timeout_settings.unprovision_timeout}s"
   }
 }
 
 # Data source to get device by IP for re-provisioning
 data "catalystcenter_network_device_by_ip" "reprovision_device" {
   count = var.device_reprovision.enabled ? 1 : 0
-  ip    = var.device_reprovision.management_ip
+  ip_address    = var.device_reprovision.management_ip
 }
 
 # 4. Wireless Device Provision
@@ -135,18 +132,12 @@ resource "catalystcenter_wireless_provision_device_create" "wireless_provision" 
       }
     }
   }
-
-  timeouts {
-    create = "${var.timeout_settings.provision_timeout}s"
-    update = "${var.timeout_settings.provision_timeout}s"
-    delete = "${var.timeout_settings.unprovision_timeout}s"
-  }
 }
 
 # Data source to get wireless device by IP
 data "catalystcenter_network_device_by_ip" "wireless_device" {
   count = var.wireless_device_provision.enabled ? 1 : 0
-  ip    = var.wireless_device_provision.management_ip
+  ip_address    = var.wireless_device_provision.management_ip
 }
 
 # 5. Provisioning Settings Configuration

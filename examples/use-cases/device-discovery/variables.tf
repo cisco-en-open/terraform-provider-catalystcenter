@@ -4,11 +4,13 @@ variable "global_credential_id_list" {
   description = "List of global credential IDs for device discovery"
   type        = list(string)
   default = [
-    # These are placeholder IDs - replace with actual global credential IDs from your Catalyst Center
-    "username:=wlcaccess",
-    "username:=wlcaccess",
-    "username:=wlcaccess"
+    "69fe2af4-1a3a-4e6d-8e3b-2ef344b7a1d0", # CLI wlcaccess
+    "51638628-a47f-4a7c-a769-885afa12d5f0", # snmpV3 Sample 1
+    "61370c94-a99e-433f-ba11-a6dbea0f841d", # defaultNetConfPort
+    "6c5e472e-fc64-423f-9da9-1d2cd38accd3", # httpsRead Sample 1
+    "990785ea-bdcd-4e19-b46e-556de2d9106b"  # httpsWrite Sample 1
   ]
+
 }
 
 # CDP Discovery Configuration
@@ -29,9 +31,10 @@ variable "cdp_discovery" {
     ip_address_list  = ["204.101.96.3"]
     protocol_order   = "ssh"
     retry           = 2
-    cdp_level       = 3
+    cdp_level       = 1
     net_conf_port   = "830"
   }
+
 }
 
 # Single IP Discovery 1 Configuration
@@ -77,7 +80,7 @@ variable "single_ip_discovery_1" {
       secure = true
     }
   }
-  sensitive = true
+
 }
 
 # Single IP Discovery 2 Configuration
@@ -141,7 +144,7 @@ variable "single_ip_discovery_2" {
       secure = true
     }
   }
-  sensitive = true
+
 }
 
 # Range IP Discovery Configuration
@@ -205,7 +208,7 @@ variable "range_ip_discovery" {
       secure = true
     }
   }
-  sensitive = true
+
 }
 
 # Multi Range IP Discovery Configuration
@@ -271,5 +274,5 @@ variable "multi_range_ip_discovery" {
       secure = true
     }
   }
-  sensitive = true
+
 }

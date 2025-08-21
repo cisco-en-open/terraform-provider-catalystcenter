@@ -10,7 +10,7 @@ catalyst_password = "Maglev1@3"
 catalyst_base_url = "https://10.22.40.189"
 
 # Optional: Enable debugging (useful for troubleshooting)
-catalyst_debug = "false"
+catalyst_debug = "true"
 
 # Optional: Disable SSL verification (useful for lab environments)
 catalyst_ssl_verify = "false"

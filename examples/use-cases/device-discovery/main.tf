@@ -9,15 +9,15 @@ terraform {
 
 # Configure provider with your Cisco Catalyst Center SDK credentials
 provider "catalystcenter" {
-  # Cisco Catalyst Center user name
+
   username = var.catalyst_username
-  # Cisco Catalyst Center password
+
   password = var.catalyst_password
-  # Cisco Catalyst Center base URL, FQDN or IP
+
   base_url = var.catalyst_base_url
-  # Boolean to enable debugging
+
   debug = var.catalyst_debug
-  # Boolean to enable or disable SSL certificate verification
+
   ssl_verify = var.catalyst_ssl_verify
 }
 

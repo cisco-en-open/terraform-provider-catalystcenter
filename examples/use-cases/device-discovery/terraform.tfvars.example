@@ -17,7 +17,7 @@ cdp_discovery = {
   ip_address_list  = ["192.168.1.1"]  # Replace with your seed IP
   protocol_order   = "ssh"
   retry           = 2
-  cdp_level       = 3
+  cdp_level       = 1
   net_conf_port   = "830"
 }
 

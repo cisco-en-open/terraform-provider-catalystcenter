@@ -8,6 +8,7 @@ output "cdp_discovery" {
     ip_address_list   = catalystcenter_discovery.cdp_discovery.parameters[0].ip_address_list
     discovery_status  = catalystcenter_discovery.cdp_discovery.parameters[0].discovery_status
   }
+
 }
 
 # Single IP Discovery 1 Outputs  
@@ -20,6 +21,7 @@ output "single_ip_discovery_1" {
     ip_address_list   = catalystcenter_discovery.single_ip_discovery_1.parameters[0].ip_address_list
     discovery_status  = catalystcenter_discovery.single_ip_discovery_1.parameters[0].discovery_status
   }
+
 }
 
 # Single IP Discovery 2 Outputs
@@ -32,6 +34,7 @@ output "single_ip_discovery_2" {
     ip_address_list   = catalystcenter_discovery.single_ip_discovery_2.parameters[0].ip_address_list
     discovery_status  = catalystcenter_discovery.single_ip_discovery_2.parameters[0].discovery_status
   }
+
 }
 
 # Range IP Discovery Outputs
@@ -44,6 +47,7 @@ output "range_ip_discovery" {
     ip_address_list   = catalystcenter_discovery.range_ip_discovery.parameters[0].ip_address_list
     discovery_status  = catalystcenter_discovery.range_ip_discovery.parameters[0].discovery_status
   }
+
 }
 
 # Multi Range IP Discovery Outputs
@@ -56,6 +60,7 @@ output "multi_range_ip_discovery" {
     ip_address_list   = catalystcenter_discovery.multi_range_ip_discovery.parameters[0].ip_address_list
     discovery_status  = catalystcenter_discovery.multi_range_ip_discovery.parameters[0].discovery_status
   }
+
 }
 
 # Summary Output
@@ -78,6 +83,7 @@ output "discovery_summary" {
       "204.101.16.2-204.101.16.3, 204.101.16.4-204.101.16.4 (Multi Range)"
     ]
   }
+
 }
 
 # Test Results Output for Validation
@@ -97,4 +103,5 @@ output "discovery_test_results" {
       "SNMPv3 (Single 2, Range, Multi Range)"
     ]
   }
+
 }

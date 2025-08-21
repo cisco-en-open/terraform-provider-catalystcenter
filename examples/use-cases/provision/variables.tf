@@ -5,7 +5,7 @@
 variable "site_name_hierarchy" {
   description = "Site hierarchy path for device assignment and provisioning"
   type        = string
-  default     = "Global/USA/SAN JOSE/SJ_BLD23"
+  default     = "Global/USA/SAN JOSE/BLD23"
 }
 
 # Wired Device Provision Configuration
@@ -19,7 +19,7 @@ variable "wired_device_provision" {
   })
   default = {
     enabled         = true
-    management_ip   = "204.1.2.5"
+    management_ip   = "204.101.96.1"
     provisioning    = true
     force_provisioning = false
   }
@@ -34,7 +34,7 @@ variable "site_assignment_only" {
   })
   default = {
     enabled       = true
-    management_ip = "204.1.2.6"
+    management_ip = "204.101.96.2"
   }
 }
 
@@ -47,7 +47,7 @@ variable "device_reprovision" {
   })
   default = {
     enabled       = false
-    management_ip = "204.1.2.7"
+    management_ip = "204.101.96.1"
   }
 }
 
@@ -91,8 +91,8 @@ variable "application_telemetry" {
   default = {
     enabled = true
     device_ips = [
-      "204.1.2.1",
-      "204.1.2.3"
+      "204.101.96.1",
+      "204.101.96.2"
     ]
     wired_config = {
       telemetry = "enable"
