@@ -1,0 +1,147 @@
+# Terraform Variables Example for Inventory Workflow
+# Copy this file to terraform.tfvars and update with your environment values
+
+# Site hierarchy - Replace with your actual site structure
+site_name_hierarchy = "Global/USA/SAN JOSE/SJ_BLD23"
+
+# Device Onboarding Configuration
+# Enable/disable device onboarding and specify device details
+device_onboarding = {
+  enabled = true                              # Set to false to disable device onboarding
+  devices = [
+    {
+      description   = "Access Switch 01"      # Device description
+      hostname      = "SW-ACCESS-01"          # Device hostname
+      mac_address   = "00:1A:2B:3C:4D:5E"    # Replace with actual MAC address
+      pid           = "C9300-24T"             # Replace with actual Product ID
+      serial_number = "FDO12345678"           # Replace with actual serial number
+    },
+    {
+      description   = "Distribution Switch 01"
+      hostname      = "SW-DIST-01"
+      mac_address   = "00:1A:2B:3C:4D:5F"    # Replace with actual MAC address
+      pid           = "C9300-48T"             # Replace with actual Product ID
+      serial_number = "FDO12345679"           # Replace with actual serial number
+    }
+  ]
+}
+
+# Site Assignment and Provisioning Configuration
+# Configure devices for site assignment and provisioning
+site_assignment_provision = {
+  enabled = true                              # Set to false to disable provisioning
+  device_ips = [
+    "204.1.2.10",                            # Replace with your device IPs
+    "204.1.2.11",
+    "204.1.2.12"
+  ]
+}
+
+# Device Operations Configuration
+# Configure device resync and reboot operations
+device_operations = {
+  resync_enabled = true                       # Set to false to disable resync operations
+  reboot_enabled = false                      # Set to true to enable AP reboots
+  force_sync     = false                      # Set to true for high-priority sync
+  device_ids = [
+    "device-uuid-1",                         # Replace with actual device UUIDs
+    "device-uuid-2"
+  ]
+  ap_mac_addresses = [
+    "00:2A:3B:4C:5D:6E",                     # Replace with actual AP MAC addresses
+    "00:2A:3B:4C:5D:6F"
+  ]
+}
+
+# Device Deletion Configuration
+# Configure device removal from inventory
+device_deletion = {
+  enabled      = false                        # Set to true to enable device deletion
+  clean_config = true                         # true = delete with cleanup, false = delete without cleanup
+  device_ids = [
+    "device-uuid-to-delete-1",               # Replace with actual device UUIDs to delete
+    "device-uuid-to-delete-2"
+  ]
+}
+
+# Maintenance Scheduling Configuration
+# Schedule maintenance windows for devices
+maintenance_scheduling = {
+  enabled = true                              # Set to false to disable maintenance scheduling
+  schedules = [
+    {
+      description          = "Monthly maintenance for access switches"
+      device_ids          = ["device-uuid-1", "device-uuid-2"]  # Replace with actual device UUIDs
+      start_time          = 1735689000000     # Unix epoch time in milliseconds (2025-01-01 00:30:00 UTC)
+      end_time            = 1735692600000     # Unix epoch time in milliseconds (2025-01-01 01:30:00 UTC)
+      recurrence_interval = 30                # Days between recurring maintenance (optional)
+      recurrence_end_time = 1767225000000     # End date for recurrence (optional)
+    },
+    {
+      description = "One-time firmware upgrade"
+      device_ids  = ["device-uuid-3"]         # Replace with actual device UUIDs
+      start_time  = 1735775400000             # Unix epoch time in milliseconds (2025-01-02 00:30:00 UTC)
+      end_time    = 1735779000000             # Unix epoch time in milliseconds (2025-01-02 01:30:00 UTC)
+      # No recurrence for one-time maintenance
+    }
+  ]
+}
+
+# Global Settings
+enable_debug = true                           # Set to false to disable debug output
+
+# Timeout Settings (in seconds)
+timeout_settings = {
+  onboarding_timeout = 300                    # 5 minutes - adjust based on your environment
+  provision_timeout  = 600                    # 10 minutes - adjust based on your environment
+  operation_timeout  = 180                    # 3 minutes - adjust based on your environment
+  deletion_timeout   = 240                    # 4 minutes - adjust based on your environment
+}
+
+# ==============================================================================
+# INSTRUCTIONS FOR CUSTOMIZATION:
+# ==============================================================================
+#
+# 1. REQUIRED CHANGES:
+#    - Update site_name_hierarchy with your actual site hierarchy
+#    - Replace all device_ids with your actual device UUIDs from Catalyst Center
+#    - Replace all MAC addresses, serial numbers, and PIDs with actual values
+#    - Update device IP addresses with your actual device management IPs
+#    - Update maintenance window times with your preferred schedule
+#
+# 2. WORKFLOW SELECTION:
+#    - Set enabled = true for the workflows you want to test
+#    - Set enabled = false for workflows you don't need
+#    - At least one workflow should be enabled for testing
+#
+# 3. DEVICE REQUIREMENTS:
+#    - For onboarding: Ensure devices are not already discovered
+#    - For provisioning: Ensure devices are already discovered in Catalyst Center
+#    - For operations: Ensure devices are provisioned and reachable
+#    - For deletion: Use test devices or devices you can safely remove
+#
+# 4. MAINTENANCE SCHEDULING:
+#    - Use Unix epoch time in milliseconds for start_time and end_time
+#    - You can use online converters or: date -d "2025-01-01 00:30:00 UTC" +%s000
+#    - Ensure maintenance windows don't conflict with business hours
+#    - Test recurrence settings carefully to avoid unintended maintenance
+#
+# 5. NETWORK ACCESS:
+#    - Ensure Terraform can reach your Catalyst Center instance
+#    - Verify authentication credentials are properly configured
+#    - Check that all device IPs are accessible from Catalyst Center
+#
+# 6. TESTING RECOMMENDATIONS:
+#    - Start with device_onboarding for new devices
+#    - Test site_assignment_provision with known good devices
+#    - Use device_operations.resync_enabled to verify device connectivity
+#    - Test maintenance_scheduling with short windows first
+#    - Use device_deletion very carefully and only on test devices
+#
+# 7. TROUBLESHOOTING:
+#    - Keep enable_debug = true during initial testing
+#    - Increase timeout values if operations take longer in your environment
+#    - Check Catalyst Center Task Manager for detailed operation status
+#    - Review Catalyst Center logs for error details
+#
+# ==============================================================================
