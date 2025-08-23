@@ -1,6 +1,23 @@
 # Software Image Management (SWIM) Workflow Terraform Configuration
 # This configuration demonstrates SWIM operations including image import and management
 
+terraform {
+  required_providers {
+    catalystcenter = {
+      version = "1.2.0-beta"
+      source  = "cisco-en-programmability/catalystcenter"
+    }
+  }
+}
+
+provider "catalystcenter" {
+  username   = var.catalyst_username   
+  password   = var.catalyst_password   
+  base_url   = var.catalyst_base_url   
+  debug      = var.catalyst_debug      
+  ssl_verify = var.catalyst_ssl_verify 
+}
+
 # Data source to retrieve existing software image details
 data "catalystcenter_swim_image_details" "existing_images" {
   provider = catalystcenter
@@ -20,17 +37,19 @@ resource "catalystcenter_swim_image_url" "import_from_url" {
   count    = var.swim_operations.import_from_url.enabled ? length(var.swim_operations.import_from_url.images) : 0
 
   parameters {
-    source_url       = var.swim_operations.import_from_url.images[count.index].source_url
-    third_party      = var.swim_operations.import_from_url.images[count.index].third_party
-    vendor           = var.swim_operations.import_from_url.images[count.index].vendor
-    application_type = var.swim_operations.import_from_url.images[count.index].application_type
-    image_family     = var.swim_operations.import_from_url.images[count.index].image_family
+    # Optional scheduling parameters
+    schedule_at     = var.swim_operations.import_from_url.images[count.index].schedule_at
+    schedule_desc   = var.swim_operations.import_from_url.images[count.index].schedule_desc
+    schedule_origin = var.swim_operations.import_from_url.images[count.index].schedule_origin
+    
+    payload {
+      source_url       = var.swim_operations.import_from_url.images[count.index].source_url
+      third_party      = var.swim_operations.import_from_url.images[count.index].third_party
+      vendor           = var.swim_operations.import_from_url.images[count.index].vendor
+      application_type = var.swim_operations.import_from_url.images[count.index].application_type
+      image_family     = var.swim_operations.import_from_url.images[count.index].image_family
+    }
   }
-
-  # Optional scheduling parameters
-  schedule_at     = var.swim_operations.import_from_url.images[count.index].schedule_at
-  schedule_desc   = var.swim_operations.import_from_url.images[count.index].schedule_desc
-  schedule_origin = var.swim_operations.import_from_url.images[count.index].schedule_origin
 }
 
 # Import software image from local file system  
