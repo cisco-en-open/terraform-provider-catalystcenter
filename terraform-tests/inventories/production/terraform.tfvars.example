@@ -1,0 +1,35 @@
+# Production Environment Configuration
+# Copy this file to terraform.tfvars and customize for your production environment
+
+# Cisco Catalyst Center credentials
+catalyst_username = "admin"
+catalyst_password = "your-production-password"
+
+# Cisco Catalyst Center connection details
+catalyst_base_url = "https://production-catalyst-center.example.com"
+
+# No debugging in production
+catalyst_debug = false
+
+# Always verify SSL in production
+catalyst_ssl_verify = true
+
+# Environment-specific settings
+environment = "production"
+resource_prefix = "prod"
+
+# Production resource limits (should match actual capacity)
+max_areas = 100
+max_buildings = 500
+max_floors = 2000
+max_devices = 5000
+
+# Production-specific features
+enable_validation = true
+auto_cleanup = false
+backup_configs = true
+
+# Production testing configuration (conservative)
+test_timeout = "120m"
+retry_attempts = 3
+parallel_tests = 1
