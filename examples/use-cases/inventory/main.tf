@@ -13,13 +13,16 @@ terraform {
     catalystcenter = {
       version = "1.2.0-beta"
       source  = "cisco-en-programmability/catalystcenter"
-      # Change to "cisco-en-programmability/catalystcenter" to use downloaded version from registry
     }
   }
 }
 
 provider "catalystcenter" {
-  debug = var.enable_debug
+  username   = var.catalyst_username   # Catalyst Center user name
+  password   = var.catalyst_password   # Catalyst Center password
+  base_url   = var.catalyst_base_url   # Catalyst Center base URL, FQDN or IP
+  debug      = var.catalyst_debug      # Boolean to enable debugging (optional)
+  ssl_verify = var.catalyst_ssl_verify # Boolean to enable/disable SSL verification (optional)
 }
 
 # Data sources to get site and device information
@@ -29,8 +32,8 @@ data "catalystcenter_sites" "target_site" {
 
 # Data source to get network devices by IP for provisioning
 data "catalystcenter_network_device_by_ip" "provision_devices" {
-  count            = var.site_assignment_provision.enabled ? length(var.site_assignment_provision.device_ips) : 0
-  management_ip_address = var.site_assignment_provision.device_ips[count.index]
+  count     = var.site_assignment_provision.enabled ? length(var.site_assignment_provision.device_ips) : 0
+  ip_address = var.site_assignment_provision.device_ips[count.index]
 }
 
 # 1. Device Onboarding - Add new devices to PnP database
