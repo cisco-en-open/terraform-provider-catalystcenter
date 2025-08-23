@@ -75,6 +75,13 @@ func resourceSdaProvisionDevices() *schema.Resource {
 				Computed:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"force_provisioning": &schema.Schema{
+							Description: `Force re-provisioning of devices that are already provisioned. When set to true, the provider will use ReProvisionDevices API for already provisioned devices instead of failing.
+`,
+							Type:     schema.TypeBool,
+							Optional: true,
+							Default:  false,
+						},
 						"payload": &schema.Schema{
 							Description: `Array of RequestApplicationPolicyCreateApplication`,
 							Type:        schema.TypeList,
@@ -129,11 +136,77 @@ func resourceSdaProvisionDevicesCreate(ctx context.Context, d *schema.ResourceDa
 	vvNetworkDeviceID := interfaceToString(vNetworkID)
 	vSiteID := resourceItem["site_id"]
 	vvSiteID := interfaceToString(vSiteID)
+
+	// Get force_provisioning parameter
+	forceProvisioning := d.Get("parameters.0.force_provisioning").(bool)
+
 	queryParamImport := catalystcentersdkgo.GetProvisionedDevicesQueryParams{}
 	queryParamImport.NetworkDeviceID = vvNetworkDeviceID
 	queryParamImport.SiteID = vvSiteID
 	item2, err := searchSdaGetProvisionedDevices(m, queryParamImport, vvID)
-	if err == nil && item2 != nil {
+
+	// If device already exists and force_provisioning is not enabled, return existing resource
+	if err == nil && item2 != nil && !forceProvisioning {
+		resourceMap := make(map[string]string)
+		resourceMap["id"] = item2.ID
+		resourceMap["network_device_id"] = item2.NetworkDeviceID
+		resourceMap["site_id"] = item2.SiteID
+		d.SetId(joinResourceID(resourceMap))
+		return resourceSdaProvisionDevicesRead(ctx, d, m)
+	}
+
+	// If device exists and force_provisioning is enabled, use ReProvisionDevices API
+	if err == nil && item2 != nil && forceProvisioning {
+		log.Printf("[DEBUG] Device already provisioned, using ReProvisionDevices due to force_provisioning=true")
+		requestReProvision := expandRequestSdaProvisionDevicesReProvisionDevices(ctx, "parameters.0", d)
+		if requestReProvision != nil && len(*requestReProvision) > 0 {
+			req := *requestReProvision
+			req[0].ID = item2.ID
+			requestReProvision = &req
+		}
+
+		responseReProvision, restyRespReProvision, errReProvision := client.Sda.ReProvisionDevices(requestReProvision)
+		if errReProvision != nil || responseReProvision == nil {
+			if restyRespReProvision != nil {
+				diags = append(diags, diagErrorWithResponse(
+					"Failure when executing ReProvisionDevices (force provisioning)", errReProvision, restyRespReProvision.String()))
+				return diags
+			}
+			diags = append(diags, diagError(
+				"Failure when executing ReProvisionDevices (force provisioning)", errReProvision))
+			return diags
+		}
+
+		if responseReProvision.Response == nil {
+			diags = append(diags, diagError(
+				"Failure when executing ReProvisionDevices (force provisioning)", errReProvision))
+			return diags
+		}
+
+		taskId := responseReProvision.Response.TaskID
+		log.Printf("[DEBUG] ReProvision TASKID => %s", taskId)
+		if taskId != "" {
+			time.Sleep(5 * time.Second)
+			response2, restyResp2, err := client.Task.GetTaskByID(taskId)
+			if err != nil || response2 == nil {
+				if restyResp2 != nil {
+					log.Printf("[DEBUG] Retrieved error response %s", restyResp2.String())
+				}
+				diags = append(diags, diagErrorWithAlt(
+					"Failure when executing GetTaskByID for ReProvisionDevices", err,
+					"Failure at GetTaskByID, unexpected response", ""))
+				return diags
+			}
+			if response2.Response != nil && response2.Response.IsError != nil && *response2.Response.IsError {
+				log.Printf("[DEBUG] Error reason %s", response2.Response.FailureReason)
+				errorMsg := response2.Response.Progress + "Failure Reason: " + response2.Response.FailureReason
+				err1 := errors.New(errorMsg)
+				diags = append(diags, diagError(
+					"Failure when executing ReProvisionDevices", err1))
+				return diags
+			}
+		}
+
 		resourceMap := make(map[string]string)
 		resourceMap["id"] = item2.ID
 		resourceMap["network_device_id"] = item2.NetworkDeviceID
