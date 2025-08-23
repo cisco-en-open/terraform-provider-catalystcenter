@@ -214,9 +214,9 @@ The configuration provides comprehensive outputs for monitoring test results:
 terraform output test_suite_summary
 
 # View specific test results
-terraform output test_1_single_device
-terraform output test_2_bulk_devices
-terraform output test_3_router_claiming
+terraform output single_device
+terraform output bulk_devices
+terraform output router_claiming
 # ... etc
 
 # View validation status

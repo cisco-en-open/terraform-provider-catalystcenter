@@ -3,20 +3,19 @@
 # ================================================================================
 # TEST SCENARIO 1: SINGLE DEVICE ONBOARDING OUTPUTS
 # ================================================================================
-output "test_1_single_device" {
+output "single_device" {
   description = "Test 1: Single device onboarding results"
   value = var.device_onboarding.enabled ? {
     device_id     = try(catalystcenter_pnp_device.single_device_onboarding[0].item[0].id, null)
     serial_number = try(catalystcenter_pnp_device.single_device_onboarding[0].parameters[0].device_info[0].serial_number, null)
     hostname      = try(catalystcenter_pnp_device.single_device_onboarding[0].parameters[0].device_info[0].hostname, null)
-    state         = try(catalystcenter_pnp_device.single_device_onboarding[0].parameters[0].device_info[0].state, null)
   } : null
 }
 
 # ================================================================================
 # TEST SCENARIO 2: BULK DEVICE ONBOARDING OUTPUTS
 # ================================================================================
-output "test_2_bulk_devices" {
+output "bulk_devices" {
   description = "Test 2: Bulk device onboarding results"
   value = var.bulk_onboarding.enabled ? {
     import_result = try(catalystcenter_pnp_device_import.bulk_device_import[0], null)
@@ -35,7 +34,7 @@ output "test_2_bulk_devices" {
 # ================================================================================
 # TEST SCENARIO 3: ROUTER CLAIMING OUTPUTS
 # ================================================================================
-output "test_3_router_claiming" {
+output "router_claiming" {
   description = "Test 3: Router claiming results"
   value = var.router_claiming.enabled ? {
     device_id     = try(catalystcenter_pnp_device.router_device[0].item[0].id, null)
@@ -49,7 +48,7 @@ output "test_3_router_claiming" {
 # ================================================================================
 # TEST SCENARIO 4: SWITCH CLAIMING OUTPUTS
 # ================================================================================
-output "test_4_switch_claiming" {
+output "switch_claiming" {
   description = "Test 4: Switch claiming results"
   value = var.switch_claiming.enabled ? {
     device_id     = try(catalystcenter_pnp_device.switch_device[0].item[0].id, null)
@@ -64,7 +63,7 @@ output "test_4_switch_claiming" {
 # ================================================================================
 # TEST SCENARIO 5: WIRELESS CONTROLLER CLAIMING OUTPUTS
 # ================================================================================
-output "test_5_wlc_claiming" {
+output "wlc_claiming" {
   description = "Test 5: Wireless controller claiming results"
   value = var.wlc_claiming.enabled ? {
     device_id     = try(catalystcenter_pnp_device.wireless_controller[0].item[0].id, null)
@@ -78,7 +77,7 @@ output "test_5_wlc_claiming" {
 # ================================================================================
 # TEST SCENARIO 6: ACCESS POINT CLAIMING OUTPUTS
 # ================================================================================
-output "test_6_ap_claiming" {
+output "ap_claiming" {
   description = "Test 6: Access point claiming results"
   value = var.ap_claiming.enabled ? {
     device_id       = try(catalystcenter_pnp_device.access_point[0].item[0].id, null)
@@ -93,7 +92,7 @@ output "test_6_ap_claiming" {
 # ================================================================================
 # TEST SCENARIO 7: DEVICE RESET OUTPUTS
 # ================================================================================
-output "test_7_device_reset" {
+output "device_reset" {
   description = "Test 7: Device reset results"
   value = var.device_reset.enabled ? {
     test_device_created = var.device_reset.create_test_device ? {
@@ -110,7 +109,7 @@ output "test_7_device_reset" {
 # ================================================================================
 # TEST SCENARIO 8: GLOBAL SETTINGS OUTPUTS
 # ================================================================================
-output "test_8_global_settings" {
+output "global_settings" {
   description = "Test 8: Global settings results"
   value = var.global_settings.enabled ? {
     global_settings_configured = try(catalystcenter_pnp_global_settings.global_settings[0] != null, false)
@@ -187,10 +186,10 @@ output "pnp_workflows" {
   value       = data.catalystcenter_pnp_workflow.workflows
 }
 
-output "virtual_accounts" {
-  description = "Virtual accounts information"
-  value       = data.catalystcenter_pnp_virtual_accounts.virtual_accounts
-}
+# output "virtual_accounts" {
+#   description = "Virtual accounts information"
+#   value       = data.catalystcenter_pnp_virtual_accounts.virtual_accounts
+# }
 
 output "smart_account_domains" {
   description = "Smart account domains"

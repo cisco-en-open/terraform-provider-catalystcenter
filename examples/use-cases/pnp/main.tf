@@ -35,14 +35,6 @@ resource "catalystcenter_pnp_device" "single_device_onboarding" {
       stack         = "false"
       sudi_required = "false"
       description   = "Test Device - Single Onboarding"
-      
-      # Optional Day Zero Config
-      dynamic "day_zero_config" {
-        for_each = var.device_onboarding.day_zero_config != "" ? [1] : []
-        content {
-          config = var.device_onboarding.day_zero_config
-        }
-      }
     }
   }
   
@@ -258,18 +250,6 @@ resource "catalystcenter_pnp_device_site_claim" "switch_claim" {
         skip = true
       }
     }
-    
-    # Static IP configuration (optional)
-    dynamic "static_ip" {
-      for_each = var.switch_claiming.use_static_ip ? [1] : []
-      content {
-        ip_address  = var.switch_claiming.static_ip_address
-        subnet_mask = var.switch_claiming.subnet_mask
-        gateway     = var.switch_claiming.gateway
-        dns_server  = var.switch_claiming.dns_server
-        domain      = var.switch_claiming.domain
-      }
-    }
   }
   
   depends_on = [catalystcenter_pnp_device.switch_device]
@@ -393,14 +373,6 @@ resource "catalystcenter_pnp_device_site_claim" "ap_claim" {
       }
     }
     
-    # RF Profile for AP
-    dynamic "rf_profile" {
-      for_each = var.ap_claiming.rf_profile_name != "" ? [1] : []
-      content {
-        rf_profile_name = var.ap_claiming.rf_profile_name
-      }
-    }
-    
     # Image information
     dynamic "image_info" {
       for_each = var.ap_claiming.skip_image ? [1] : []
@@ -491,15 +463,6 @@ resource "catalystcenter_pnp_global_settings" "global_settings" {
   count = var.global_settings.enabled ? 1 : 0
   
   parameters {
-    # AAA Credentials
-    dynamic "aaa_credentials" {
-      for_each = var.global_settings.aaa_username != "" ? [1] : []
-      content {
-        username = var.global_settings.aaa_username
-        password = var.global_settings.aaa_password
-      }
-    }
-    
     accept_eula = var.global_settings.accept_eula
     
     # Default Profile
@@ -662,14 +625,14 @@ data "catalystcenter_pnp_workflow" "workflows" {
   depends_on = [catalystcenter_pnp_workflow.custom_workflow]
 }
 
-# Query virtual accounts
-data "catalystcenter_pnp_virtual_accounts" "virtual_accounts" {
-  provider = catalystcenter
+# # Query virtual accounts
+# data "catalystcenter_pnp_virtual_accounts" "virtual_accounts" {
+#   provider = catalystcenter
 
-  domain = "cisco.com"
+#   domain = "cisco.com"
   
-  depends_on = [catalystcenter_pnp_virtual_account_devices_sync.va_sync]
-}
+#   depends_on = [catalystcenter_pnp_virtual_account_devices_sync.va_sync]
+# }
 
 # Query smart account domains
 data "catalystcenter_pnp_smart_account_domains" "smart_domains" {
