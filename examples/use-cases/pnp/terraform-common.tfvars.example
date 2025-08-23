@@ -1,0 +1,53 @@
+# Common variables for PnP test suite
+# Copy this file to terraform-common.tfvars and update with your values
+
+# Catalyst Center connection details
+catalyst_center_host     = "192.168.1.100"
+catalyst_center_username = "admin"
+catalyst_center_password = "admin123"
+catalyst_center_port     = 443
+catalyst_center_debug    = "false"
+catalyst_center_ssl_verify = "false"
+catalyst_center_version  = "2.3.7.6"
+
+# Common site hierarchy (update as needed)
+site_hierarchy = {
+  global = "Global"
+  country_usa = "Global/USA"
+  city_san_jose = "Global/USA/SAN JOSE"
+  city_new_york = "Global/USA/New York"
+  city_san_francisco = "Global/USA/SAN-FRANCISCO"
+  building_sj_21 = "Global/USA/SAN JOSE/SJ_BLD21"
+  building_sj_23 = "Global/USA/SAN JOSE/SJ_BLD23"  
+  building_ny_1 = "Global/USA/New York/NY_BLD1"
+  building_ny_2 = "Global/USA/New York/NY_BLD2"
+  building_sf_1 = "Global/USA/SAN-FRANCISCO/BLD_SF1"
+  floor_ny_2_1 = "Global/USA/New York/NY_BLD2/FLOOR1"
+}
+
+# Common project settings
+onboarding_project_name = "Onboarding Configuration"
+
+# Common image names (update with actual image names from your Catalyst Center)
+images = {
+  cat9k_switch = "cat9k_iosxe.17.12.04.SPA.bin"
+  cat9k_switch_alt = "cat9k_iosxe.17.12.02.SPA.bin"
+  c9800_wlc = "C9800-40-universalk9_wlc.17.12.02.SPA.bin"
+  c9800_wlc_alt = "C9800-40-universalk9_wlc.17.13.01.SPA.bin"
+  isr4400_router = "isr4400-universalk9.17.12.02.SPA.bin"
+}
+
+# Common template names (update with actual template names from your Catalyst Center)
+templates = {
+  switch_template = "PnP-Devices-SW"
+  wlc_sj_template = "PnP-Devices_SJ-EWLC"
+  wlc_ny_template = "PnP-Devices_NY-EWLC_No-Vars"
+  router_template = "PnP-Devices_SF-ISR_No-Vars"
+}
+
+# Common RF profiles for access points
+rf_profiles = {
+  high = "HIGH"
+  medium = "MEDIUM"
+  low = "LOW"
+}
