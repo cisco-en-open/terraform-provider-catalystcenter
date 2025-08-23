@@ -1,0 +1,84 @@
+#####################################
+# Catalyst Center Connection Details
+#####################################
+
+# Catalyst Center host/IP address
+catalystcenter_host = "your-catalyst-center-ip.example.com"
+
+# Authentication credentials
+catalystcenter_username = "admin"
+catalystcenter_password = "your-secure-password"
+
+# Connection settings
+catalystcenter_port = 443
+catalystcenter_version = "2.3.7.6"
+catalystcenter_verify = false
+
+#####################################
+# Device Selection Configuration
+#####################################
+
+# Option 1: Select devices by IP addresses
+ip_address_list = [
+  "204.1.2.1",
+  "204.1.2.2",
+  "204.1.2.3",
+  "204.1.2.4",
+  "204.192.4.2",
+  "204.1.2.10"
+]
+
+# Option 2: Select all devices in a site (can be used with ip_address_list)
+site_name = "Global/USA/SAN JOSE/BLD23"
+
+#####################################
+# Compliance Check Configuration
+#####################################
+
+# Enable compliance checks
+run_compliance = true
+
+# Specify compliance categories to check
+# Valid options: "INTENT", "RUNNING_CONFIG", "IMAGE", "PSIRT", "EOX", "NETWORK_SETTINGS"
+run_compliance_categories = [
+  "INTENT",
+  "RUNNING_CONFIG",
+  "IMAGE",
+  "PSIRT"
+]
+
+# Set to true to check ALL categories, false to use only categories specified above
+trigger_full_compliance = false
+
+#####################################
+# Remediation Configuration
+#####################################
+
+# Enable automatic remediation of compliance issues
+remediate_compliance_issues = true
+
+# Enable device configuration synchronization (startup <-> running config)
+sync_device_config = true
+
+#####################################
+# Timeout Configuration
+#####################################
+
+# Timeout for compliance check operations
+compliance_timeout = "30m"
+
+# Timeout for remediation operations
+remediation_timeout = "45m"
+
+# Timeout for configuration sync operations
+sync_timeout = "15m"
+
+#####################################
+# Debug Configuration
+#####################################
+
+# Enable debug mode for detailed output
+enable_debug = false
+
+# Enable provider debug logging
+catalystcenter_debug = false
