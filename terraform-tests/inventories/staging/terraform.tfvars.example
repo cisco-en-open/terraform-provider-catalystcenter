@@ -1,0 +1,35 @@
+# Staging Environment Configuration
+# Copy this file to terraform.tfvars and customize for your staging environment
+
+# Cisco Catalyst Center credentials
+catalyst_username = "admin"
+catalyst_password = "your-staging-password"
+
+# Cisco Catalyst Center connection details
+catalyst_base_url = "https://staging-catalyst-center.example.com"
+
+# Minimal debugging for staging
+catalyst_debug = false
+
+# Enable SSL verification for staging
+catalyst_ssl_verify = true
+
+# Environment-specific settings
+environment = "staging"
+resource_prefix = "stg"
+
+# Higher resource limits for staging (closer to production)
+max_areas = 50
+max_buildings = 100
+max_floors = 200
+max_devices = 500
+
+# Staging-specific features
+enable_validation = true
+auto_cleanup = false
+backup_configs = true
+
+# Testing configuration
+test_timeout = "60m"
+retry_attempts = 5
+parallel_tests = 4

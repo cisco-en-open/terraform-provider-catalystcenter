@@ -1,0 +1,35 @@
+# Development Environment Configuration
+# Copy this file to terraform.tfvars and customize for your development environment
+
+# Cisco Catalyst Center credentials
+catalyst_username = "admin"
+catalyst_password = "your-dev-password"
+
+# Cisco Catalyst Center connection details
+catalyst_base_url = "https://dev-catalyst-center.example.com"
+
+# Enable debugging for development
+catalyst_debug = true
+
+# Disable SSL verification for lab environments
+catalyst_ssl_verify = false
+
+# Environment-specific settings
+environment = "dev"
+resource_prefix = "dev"
+
+# Resource limits for development (to prevent resource exhaustion)
+max_areas = 10
+max_buildings = 20  
+max_floors = 50
+max_devices = 100
+
+# Development-specific features
+enable_validation = true
+auto_cleanup = true
+backup_configs = false
+
+# Testing configuration
+test_timeout = "30m"
+retry_attempts = 3
+parallel_tests = 2
