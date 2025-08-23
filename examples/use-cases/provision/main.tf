@@ -67,7 +67,6 @@ resource "catalystcenter_sda_provision_devices" "wired_provision" {
   count = var.wired_device_provision.enabled ? 1 : 0
 
   parameters {
-    force_provisioning = var.wired_device_provision.force_provisioning
     payload {
       network_device_id = data.catalystcenter_network_device_by_ip.wired_device[0].item[0].id
       site_id          = data.catalystcenter_sites.target_site.items[0].id
@@ -87,11 +86,18 @@ resource "catalystcenter_sda_provision_devices" "device_reprovision" {
   count = var.device_reprovision.enabled ? 1 : 0
 
   parameters {
-    force_provisioning = true
     payload {
       network_device_id = data.catalystcenter_network_device_by_ip.reprovision_device[0].item[0].id
       site_id          = data.catalystcenter_sites.target_site.items[0].id
     }
+  }
+
+  # Force re-provisioning by using replace trigger
+  lifecycle {
+    replace_triggered_by = [
+      # This ensures the resource is recreated for re-provisioning
+      terraform_data.validation.id
+    ]
   }
 }
 

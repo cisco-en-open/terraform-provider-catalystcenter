@@ -26,13 +26,10 @@ resource "catalystcenter_sda_provision_devices" "example" {
   provider = catalystcenter
  
   parameters {
-    force_provisioning = false  # Set to true to force re-provision already provisioned devices
 
-    payload {
-      id                = "string"
-      network_device_id = "string"
-      site_id           = "string"
-    }
+    id                = "string"
+    network_device_id = "string"
+    site_id           = "string"
   }
 }
 
@@ -59,7 +56,6 @@ output "catalystcenter_sda_provision_devices_example" {
 
 Optional:
 
-- `force_provisioning` (Boolean) Force re-provisioning of devices that are already provisioned. When set to true, the provider will use ReProvisionDevices API for already provisioned devices instead of failing. Default: `false`
 - `payload` (Block List) Array of RequestApplicationPolicyCreateApplication (see [below for nested schema](#nestedblock--parameters--payload))
 
 <a id="nestedblock--parameters--payload"></a>
