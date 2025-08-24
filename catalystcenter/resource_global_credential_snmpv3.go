@@ -45,6 +45,17 @@ func resourceGlobalCredentialSNMPv3() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 
+						"auth_password": &schema.Schema{
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Computed:  true,
+						},
+
+						"auth_type": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
 						"comments": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
@@ -91,6 +102,17 @@ func resourceGlobalCredentialSNMPv3() *schema.Resource {
 							Computed: true,
 						},
 
+						"privacy_password": &schema.Schema{
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Computed:  true,
+						},
+
+						"privacy_type": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
 						"read_community": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
@@ -98,6 +120,11 @@ func resourceGlobalCredentialSNMPv3() *schema.Resource {
 
 						"secure": &schema.Schema{
 							// Type:     schema.TypeBool,
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
+						"snmp_mode": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
 						},

@@ -45,19 +45,22 @@ func resourceGlobalCredentialNetconf() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 
-						"comments": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+						"auth_password": &schema.Schema{
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Computed:  true,
 						},
-						"read_community": &schema.Schema{
+
+						"auth_type": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 
-						"write_community": &schema.Schema{
+						"comments": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
 						},
+
 						"credential_type": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
@@ -66,6 +69,12 @@ func resourceGlobalCredentialNetconf() *schema.Resource {
 						"description": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
+						},
+
+						"enable_password": &schema.Schema{
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Computed:  true,
 						},
 
 						"id": &schema.Schema{
@@ -99,13 +108,39 @@ func resourceGlobalCredentialNetconf() *schema.Resource {
 							Computed: true,
 						},
 
+						"privacy_password": &schema.Schema{
+							Type:      schema.TypeString,
+							Sensitive: true,
+							Computed:  true,
+						},
+
+						"privacy_type": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
+						"read_community": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
 						"secure": &schema.Schema{
 							// Type:     schema.TypeBool,
 							Type:     schema.TypeString,
 							Computed: true,
 						},
 
+						"snmp_mode": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
 						"username": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+
+						"write_community": &schema.Schema{
 							Type:     schema.TypeString,
 							Computed: true,
 						},
