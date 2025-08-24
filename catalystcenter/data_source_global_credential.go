@@ -337,25 +337,56 @@ func flattenDiscoveryGetGlobalCredentialsItems(items *[]catalystcentersdkgo.Resp
 	var respItems []map[string]interface{}
 	for _, item := range *items {
 		respItem := make(map[string]interface{})
-		respItem["username"] = item.Username
-		respItem["enable_password"] = item.EnablePassword
-		respItem["password"] = item.Password
-		respItem["netconf_port"] = item.NetconfPort
-		respItem["read_community"] = item.ReadCommunity
-		respItem["write_community"] = item.WriteCommunity
-		respItem["auth_password"] = item.AuthPassword
-		respItem["auth_type"] = item.AuthType
-		respItem["privacy_password"] = item.PrivacyPassword
-		respItem["privacy_type"] = item.PrivacyType
-		respItem["snmp_mode"] = item.SNMPMode
-		respItem["secure"] = item.Secure
-		respItem["port"] = item.Port
+
+		// Always set common fields
 		respItem["comments"] = item.Comments
 		respItem["credential_type"] = item.CredentialType
 		respItem["description"] = item.Description
 		respItem["id"] = item.ID
 		respItem["instance_tenant_id"] = item.InstanceTenantID
 		respItem["instance_uuid"] = item.InstanceUUID
+
+		// Set optional fields only if they are non-empty to avoid type issues
+		if item.Username != "" {
+			respItem["username"] = item.Username
+		}
+		if item.Password != "" {
+			respItem["password"] = item.Password
+		}
+		if item.EnablePassword != "" {
+			respItem["enable_password"] = item.EnablePassword
+		}
+		if item.NetconfPort != "" {
+			respItem["netconf_port"] = item.NetconfPort
+		}
+		if item.ReadCommunity != "" {
+			respItem["read_community"] = item.ReadCommunity
+		}
+		if item.WriteCommunity != "" {
+			respItem["write_community"] = item.WriteCommunity
+		}
+		if item.AuthPassword != "" {
+			respItem["auth_password"] = item.AuthPassword
+		}
+		if item.AuthType != "" {
+			respItem["auth_type"] = item.AuthType
+		}
+		if item.PrivacyPassword != "" {
+			respItem["privacy_password"] = item.PrivacyPassword
+		}
+		if item.PrivacyType != "" {
+			respItem["privacy_type"] = item.PrivacyType
+		}
+		if item.SNMPMode != "" {
+			respItem["snmp_mode"] = item.SNMPMode
+		}
+		if item.Secure != "" {
+			respItem["secure"] = item.Secure
+		}
+		if item.Port != nil && *item.Port != 0 {
+			respItem["port"] = item.Port
+		}
+
 		respItems = append(respItems, respItem)
 	}
 	return respItems

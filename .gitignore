@@ -1,6 +1,7 @@
 .DS_Store
 
 terraform-provider-catalystcenter
+terraform-provider-catalystcenter_*
 
 
 # Local .terraform directories
