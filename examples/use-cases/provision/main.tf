@@ -38,11 +38,11 @@ data "catalystcenter_sites" "target_site" {
 # This assigns a device to a site without provisioning it
 resource "catalystcenter_sda_provision_devices" "site_assignment" {
   count = var.site_assignment_only.enabled ? 1 : 0
-  
+
   parameters {
     payload {
       network_device_id = data.catalystcenter_network_device_by_ip.site_assign[0].item[0].id
-      site_id          = data.catalystcenter_sites.target_site.items[0].id
+      site_id           = data.catalystcenter_sites.target_site.items[0].id
     }
   }
 
@@ -69,7 +69,7 @@ resource "catalystcenter_sda_provision_devices" "wired_provision" {
   parameters {
     payload {
       network_device_id = data.catalystcenter_network_device_by_ip.wired_device[0].item[0].id
-      site_id          = data.catalystcenter_sites.target_site.items[0].id
+      site_id           = data.catalystcenter_sites.target_site.items[0].id
     }
   }
 }
@@ -88,7 +88,7 @@ resource "catalystcenter_sda_provision_devices" "device_reprovision" {
   parameters {
     payload {
       network_device_id = data.catalystcenter_network_device_by_ip.reprovision_device[0].item[0].id
-      site_id          = data.catalystcenter_sites.target_site.items[0].id
+      site_id           = data.catalystcenter_sites.target_site.items[0].id
     }
   }
 
@@ -114,10 +114,10 @@ resource "catalystcenter_wireless_provision_device_create" "wireless_provision" 
 
   parameters {
     payload {
-      device_name = data.catalystcenter_network_device_by_ip.wireless_device[0].item[0].hostname
-      site        = var.site_name_hierarchy
+      device_name         = data.catalystcenter_network_device_by_ip.wireless_device[0].item[0].hostname
+      site                = var.site_name_hierarchy
       managed_aplocations = var.wireless_device_provision.managed_ap_locations
-      
+
       # Optional dynamic interfaces configuration
       dynamic "dynamic_interfaces" {
         for_each = [] # Add interface configurations if needed
@@ -157,7 +157,7 @@ locals {
     var.device_reprovision.enabled ? [var.device_reprovision.management_ip] : [],
     var.wireless_device_provision.enabled ? [var.wireless_device_provision.management_ip] : []
   )
-  
+
   provisioned_device_count = length([
     for config in [
       var.wired_device_provision.enabled,
@@ -165,7 +165,7 @@ locals {
       var.device_reprovision.enabled
     ] : config if config
   ])
-  
+
   site_assigned_count = var.site_assignment_only.enabled ? 1 : 0
 }
 
@@ -176,7 +176,7 @@ resource "terraform_data" "validation" {
       condition     = length(var.site_name_hierarchy) > 0
       error_message = "Site name hierarchy must not be empty."
     }
-    
+
     precondition {
       condition     = var.wired_device_provision.enabled || var.site_assignment_only.enabled || var.device_reprovision.enabled || var.wireless_device_provision.enabled
       error_message = "At least one provision workflow must be enabled."
