@@ -1,0 +1,68 @@
+{
+  "timestamp": "2025-09-24T18:57:42.68855038-07:00",
+  "total_coverage": 0,
+  "package_coverage": {},
+  "file_coverage": {
+    "catalystcenter/test/mocks/mock_client.go:112:": {
+      "path": "catalystcenter/test/mocks/mock_client.go:112:",
+      "coverage": 0,
+      "lines": 0,
+      "covered": 0,
+      "uncovered": 0
+    },
+    "catalystcenter/test/mocks/mock_client.go:129:": {
+      "path": "catalystcenter/test/mocks/mock_client.go:129:",
+      "coverage": 0,
+      "lines": 0,
+      "covered": 0,
+      "uncovered": 0
+    },
+    "catalystcenter/test/mocks/mock_client.go:27:": {
+      "path": "catalystcenter/test/mocks/mock_client.go:27:",
+      "coverage": 0,
+      "lines": 0,
+      "covered": 0,
+      "uncovered": 0
+    },
+    "catalystcenter/test/mocks/mock_client.go:44:": {
+      "path": "catalystcenter/test/mocks/mock_client.go:44:",
+      "coverage": 0,
+      "lines": 0,
+      "covered": 0,
+      "uncovered": 0
+    },
+    "catalystcenter/test/mocks/mock_client.go:61:": {
+      "path": "catalystcenter/test/mocks/mock_client.go:61:",
+      "coverage": 0,
+      "lines": 0,
+      "covered": 0,
+      "uncovered": 0
+    },
+    "catalystcenter/test/mocks/mock_client.go:78:": {
+      "path": "catalystcenter/test/mocks/mock_client.go:78:",
+      "coverage": 0,
+      "lines": 0,
+      "covered": 0,
+      "uncovered": 0
+    },
+    "catalystcenter/test/mocks/mock_client.go:95:": {
+      "path": "catalystcenter/test/mocks/mock_client.go:95:",
+      "coverage": 0,
+      "lines": 0,
+      "covered": 0,
+      "uncovered": 0
+    }
+  },
+  "uncovered_functions": [
+    "catalystcenter/test/mocks/mock_client.go:27::GetTagByID",
+    "catalystcenter/test/mocks/mock_client.go:44::CreateTag",
+    "catalystcenter/test/mocks/mock_client.go:61::UpdateTag",
+    "catalystcenter/test/mocks/mock_client.go:78::DeleteTag",
+    "catalystcenter/test/mocks/mock_client.go:95::GetTag",
+    "catalystcenter/test/mocks/mock_client.go:112::GetTaskByID",
+    "catalystcenter/test/mocks/mock_client.go:129::NewMockClient"
+  ],
+  "test_count": 0,
+  "pass_count": 0,
+  "fail_count": 4
+}

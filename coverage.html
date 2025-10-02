@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>mocks: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">terraform-provider-catalystcenter/catalystcenter/test/mocks/extended_mock_client.go (0.0%)</option>
+				
+				<option value="file1">terraform-provider-catalystcenter/catalystcenter/test/mocks/mock_client.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package mocks
+
+import (
+    "github.com/stretchr/testify/mock"
+)
+
+// ExtendedMockClient provides mocks for all services
+type ExtendedMockClient struct {
+    mock.Mock
+}
+
+// Generic mock response generator
+func (m *ExtendedMockClient) ExecuteOperation(operation string, params interface{}) (interface{}, error) <span class="cov0" title="0">{
+    args := m.Called(operation, params)
+    return args.Get(0), args.Error(1)
+}</span>
+
+// CreateMockResponse generates mock responses
+func CreateMockResponse(resourceType string) interface{} <span class="cov0" title="0">{
+    responses := map[string]interface{}{
+        "tag": map[string]interface{}{
+            "id": "mock-id",
+            "name": "mock-name",
+        },
+        "device": map[string]interface{}{
+            "id": "device-id",
+            "hostname": "mock-device",
+        },
+        "default": map[string]interface{}{
+            "status": "success",
+        },
+    }
+
+    if resp, ok := responses[resourceType]; ok </span><span class="cov0" title="0">{
+        return resp
+    }</span>
+    <span class="cov0" title="0">return responses["default"]</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package mocks
+
+import (
+        "github.com/stretchr/testify/mock"
+        catalystcentersdkgo "github.com/cisco-en-programmability/catalystcenter-go-sdk/v3/sdk"
+        "github.com/go-resty/resty/v2"
+)
+
+// MockCatalystClient is a mock implementation of the Catalyst Center SDK client
+type MockCatalystClient struct {
+        mock.Mock
+        TagService  *MockTagService
+        TaskService *MockTaskService
+}
+
+// MockTagService mocks the Tag service
+type MockTagService struct {
+        mock.Mock
+}
+
+// MockTaskService mocks the Task service
+type MockTaskService struct {
+        mock.Mock
+}
+
+// GetTagByID mocks the GetTagByID method
+func (m *MockTagService) GetTagByID(id string) (*catalystcentersdkgo.ResponseTagGetTagByID, *resty.Response, error) <span class="cov0" title="0">{
+        args := m.Called(id)
+
+        var resp *catalystcentersdkgo.ResponseTagGetTagByID
+        if args.Get(0) != nil </span><span class="cov0" title="0">{
+                resp = args.Get(0).(*catalystcentersdkgo.ResponseTagGetTagByID)
+        }</span>
+
+        <span class="cov0" title="0">var restyResp *resty.Response
+        if args.Get(1) != nil </span><span class="cov0" title="0">{
+                restyResp = args.Get(1).(*resty.Response)
+        }</span>
+
+        <span class="cov0" title="0">return resp, restyResp, args.Error(2)</span>
+}
+
+// CreateTag mocks the CreateTag method
+func (m *MockTagService) CreateTag(request *catalystcentersdkgo.RequestTagCreateTag) (*catalystcentersdkgo.ResponseTagCreateTag, *resty.Response, error) <span class="cov0" title="0">{
+        args := m.Called(request)
+
+        var resp *catalystcentersdkgo.ResponseTagCreateTag
+        if args.Get(0) != nil </span><span class="cov0" title="0">{
+                resp = args.Get(0).(*catalystcentersdkgo.ResponseTagCreateTag)
+        }</span>
+
+        <span class="cov0" title="0">var restyResp *resty.Response
+        if args.Get(1) != nil </span><span class="cov0" title="0">{
+                restyResp = args.Get(1).(*resty.Response)
+        }</span>
+
+        <span class="cov0" title="0">return resp, restyResp, args.Error(2)</span>
+}
+
+// UpdateTag mocks the UpdateTag method
+func (m *MockTagService) UpdateTag(request *catalystcentersdkgo.RequestTagUpdateTag) (*catalystcentersdkgo.ResponseTagUpdateTag, *resty.Response, error) <span class="cov0" title="0">{
+        args := m.Called(request)
+
+        var resp *catalystcentersdkgo.ResponseTagUpdateTag
+        if args.Get(0) != nil </span><span class="cov0" title="0">{
+                resp = args.Get(0).(*catalystcentersdkgo.ResponseTagUpdateTag)
+        }</span>
+
+        <span class="cov0" title="0">var restyResp *resty.Response
+        if args.Get(1) != nil </span><span class="cov0" title="0">{
+                restyResp = args.Get(1).(*resty.Response)
+        }</span>
+
+        <span class="cov0" title="0">return resp, restyResp, args.Error(2)</span>
+}
+
+// DeleteTag mocks the DeleteTag method
+func (m *MockTagService) DeleteTag(id string) (*catalystcentersdkgo.ResponseTagDeleteTag, *resty.Response, error) <span class="cov0" title="0">{
+        args := m.Called(id)
+
+        var resp *catalystcentersdkgo.ResponseTagDeleteTag
+        if args.Get(0) != nil </span><span class="cov0" title="0">{
+                resp = args.Get(0).(*catalystcentersdkgo.ResponseTagDeleteTag)
+        }</span>
+
+        <span class="cov0" title="0">var restyResp *resty.Response
+        if args.Get(1) != nil </span><span class="cov0" title="0">{
+                restyResp = args.Get(1).(*resty.Response)
+        }</span>
+
+        <span class="cov0" title="0">return resp, restyResp, args.Error(2)</span>
+}
+
+// GetTag mocks the GetTag method
+func (m *MockTagService) GetTag(params *catalystcentersdkgo.GetTagQueryParams) (*catalystcentersdkgo.ResponseTagGetTag, *resty.Response, error) <span class="cov0" title="0">{
+        args := m.Called(params)
+
+        var resp *catalystcentersdkgo.ResponseTagGetTag
+        if args.Get(0) != nil </span><span class="cov0" title="0">{
+                resp = args.Get(0).(*catalystcentersdkgo.ResponseTagGetTag)
+        }</span>
+
+        <span class="cov0" title="0">var restyResp *resty.Response
+        if args.Get(1) != nil </span><span class="cov0" title="0">{
+                restyResp = args.Get(1).(*resty.Response)
+        }</span>
+
+        <span class="cov0" title="0">return resp, restyResp, args.Error(2)</span>
+}
+
+// GetTaskByID mocks the GetTaskByID method
+func (m *MockTaskService) GetTaskByID(taskID string) (*catalystcentersdkgo.ResponseTaskGetTaskByID, *resty.Response, error) <span class="cov0" title="0">{
+        args := m.Called(taskID)
+
+        var resp *catalystcentersdkgo.ResponseTaskGetTaskByID
+        if args.Get(0) != nil </span><span class="cov0" title="0">{
+                resp = args.Get(0).(*catalystcentersdkgo.ResponseTaskGetTaskByID)
+        }</span>
+
+        <span class="cov0" title="0">var restyResp *resty.Response
+        if args.Get(1) != nil </span><span class="cov0" title="0">{
+                restyResp = args.Get(1).(*resty.Response)
+        }</span>
+
+        <span class="cov0" title="0">return resp, restyResp, args.Error(2)</span>
+}
+
+// NewMockClient creates a new mock client with initialized services
+func NewMockClient() *MockCatalystClient <span class="cov0" title="0">{
+        client := &amp;MockCatalystClient{}
+        client.TagService = &amp;MockTagService{}
+        client.TaskService = &amp;MockTaskService{}
+        return client
+}</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
