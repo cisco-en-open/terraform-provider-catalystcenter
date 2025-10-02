@@ -61,3 +61,48 @@ vet:
 		echo "and fix them if necessary before submitting the code for review."; \
 		exit 1; \
 	fi
+
+# New testing targets for comprehensive testing
+test-unit:
+	@echo "Running unit tests..."
+	@go test -v -run "^Test[^Acc]" ./catalystcenter/... -timeout 30s
+
+test-integration:
+	@echo "Running integration tests..."
+	@go test -v -run "TestIntegration" ./catalystcenter/... -timeout 60s
+
+test-coverage:
+	@echo "Generating coverage report..."
+	@go test -coverprofile=coverage.out ./catalystcenter/...
+	@go tool cover -html=coverage.out -o coverage.html
+	@echo "Coverage report generated: coverage.html"
+
+test-coverage-report:
+	@echo "Coverage summary:"
+	@go test -cover ./catalystcenter/... | grep -E "coverage:|ok"
+
+test-benchmark:
+	@echo "Running benchmark tests..."
+	@go test -bench=. -benchmem -run=^$$ ./catalystcenter/...
+
+test-race:
+	@echo "Running tests with race detector..."
+	@go test -race ./catalystcenter/...
+
+test-all: test-unit test-coverage-report
+
+test-verbose:
+	@echo "Running all tests with verbose output..."
+	@go test -v ./catalystcenter/...
+
+test-specific:
+	@echo "Running specific test: $(TEST_NAME)"
+	@go test -v -run $(TEST_NAME) ./catalystcenter/...
+
+test-clean:
+	@echo "Cleaning test artifacts..."
+	@rm -f coverage.out coverage.html
+	@rm -f test_report_*.txt
+	@rm -f benchmark_results.txt
+
+.PHONY: test test-unit test-integration test-coverage test-coverage-report test-benchmark test-race test-all test-verbose test-specific test-clean testacc

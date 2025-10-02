@@ -1,0 +1,305 @@
+name: Comprehensive Testing
+
+on:
+  pull_request:
+    paths-ignore:
+      - "README.md"
+      - "docs/**"
+      - "examples/**"
+  push:
+    branches:
+      - main
+      - develop
+    paths-ignore:
+      - "README.md"
+      - "docs/**"
+      - "examples/**"
+  schedule:
+    # Run daily at 2 AM UTC to catch API drift
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_type:
+        description: 'Type of tests to run'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - unit
+          - integration
+          - acceptance
+
+jobs:
+  # Code quality checks
+  quality-checks:
+    name: Code Quality Checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+          cache: true
+
+      - name: Run go fmt
+        run: |
+          if [ -n "$(gofmt -l .)" ]; then
+            echo "Go code is not formatted. Run 'go fmt ./...' to fix."
+            gofmt -d .
+            exit 1
+          fi
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Run staticcheck
+        uses: dominikh/staticcheck-action@v1.3.0
+        with:
+          version: "latest"
+
+      - name: Run gosec (security scan)
+        uses: securego/gosec@master
+        with:
+          args: '-exclude=G104 ./...'
+
+  # Unit tests with coverage
+  unit-tests:
+    name: Unit Tests
+    needs: quality-checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        go-version: ["1.20", "1.21"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          go mod download
+          go mod vendor
+
+      - name: Run unit tests
+        run: |
+          go test -mod=readonly -v -run "^Test[^Acc]" -coverprofile=coverage.out -covermode=atomic ./catalystcenter/...
+
+      - name: Generate coverage report
+        run: |
+          go tool cover -html=coverage.out -o coverage.html
+          go tool cover -func=coverage.out | grep total | awk '{print "Total Coverage: " $3}'
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.out
+          flags: unittests
+          name: codecov-${{ matrix.go-version }}
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-${{ matrix.go-version }}
+          path: |
+            coverage.out
+            coverage.html
+
+      - name: Check minimum coverage
+        run: |
+          COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
+          echo "Current coverage: $COVERAGE%"
+          # Set minimum coverage threshold (adjust as needed)
+          MIN_COVERAGE=1.0
+          if (( $(echo "$COVERAGE < $MIN_COVERAGE" | bc -l) )); then
+            echo "Coverage is below minimum threshold of $MIN_COVERAGE%"
+            exit 1
+          fi
+
+  # Integration tests
+  integration-tests:
+    name: Integration Tests
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: github.event_name != 'schedule' || github.event.inputs.test_type == 'integration' || github.event.inputs.test_type == 'all'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+          cache: true
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run integration tests
+        run: |
+          go test -mod=readonly -v -run "TestIntegration" -timeout=10m ./catalystcenter/...
+
+  # Acceptance tests (only on main branch or manual trigger)
+  acceptance-tests:
+    name: Acceptance Tests
+    needs: integration-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: (github.ref == 'refs/heads/main' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
+    env:
+      TF_ACC: "1"
+    strategy:
+      matrix:
+        terraform-version: ["1.5.x", "1.6.x"]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+          cache: true
+
+      - name: Setup Terraform ${{ matrix.terraform-version }}
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ matrix.terraform-version }}
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Run acceptance tests
+        env:
+          CATALYST_BASE_URL: ${{ secrets.CATALYST_BASE_URL }}
+          CATALYST_USERNAME: ${{ secrets.CATALYST_USERNAME }}
+          CATALYST_PASSWORD: ${{ secrets.CATALYST_PASSWORD }}
+        run: |
+          if [ ! -z "$CATALYST_BASE_URL" ]; then
+            go test -mod=readonly -v -run "TestAcc" -timeout=45m ./catalystcenter/...
+          else
+            echo "Skipping acceptance tests - Catalyst Center credentials not configured"
+          fi
+
+  # Benchmark tests (weekly)
+  benchmark-tests:
+    name: Benchmark Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.21"
+          cache: true
+
+      - name: Run benchmarks
+        run: |
+          go test -mod=readonly -bench=. -benchmem -run=^$ ./catalystcenter/... | tee benchmark_results.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v3
+        with:
+          name: benchmark-results
+          path: benchmark_results.txt
+
+      - name: Compare with baseline
+        run: |
+          # In future, implement benchmark comparison with baseline
+          echo "Benchmark results:"
+          cat benchmark_results.txt | grep -E "Benchmark|ns/op|B/op|allocs/op"
+
+  # Test summary and reporting
+  test-summary:
+    name: Test Summary
+    needs: [unit-tests, integration-tests]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-1.21
+          path: coverage/
+
+      - name: Generate test report
+        run: |
+          echo "# Test Summary Report" > test_summary.md
+          echo "" >> test_summary.md
+          echo "## Coverage" >> test_summary.md
+          if [ -f coverage/coverage.out ]; then
+            echo '```' >> test_summary.md
+            go tool cover -func=coverage/coverage.out | tail -5 >> test_summary.md
+            echo '```' >> test_summary.md
+          fi
+          echo "" >> test_summary.md
+          echo "## Test Status" >> test_summary.md
+          echo "- Quality Checks: ${{ needs.quality-checks.result }}" >> test_summary.md
+          echo "- Unit Tests: ${{ needs.unit-tests.result }}" >> test_summary.md
+          echo "- Integration Tests: ${{ needs.integration-tests.result }}" >> test_summary.md
+
+      - name: Comment PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('test_summary.md', 'utf8');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+
+  # Security scanning
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # Release gate (only if all tests pass)
+  release-gate:
+    name: Release Gate
+    needs: [quality-checks, unit-tests, integration-tests, security-scan]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: All tests passed
+        run: |
+          echo "✅ All tests passed successfully!"
+          echo "Ready for release"

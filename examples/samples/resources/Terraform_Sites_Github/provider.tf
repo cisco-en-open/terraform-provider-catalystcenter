@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     catalystcenter = {
-      source  = "hashicorp.com/edu/catalystcenter"
+      source  = "cisco-en-programmability/catalystcenter"
       version = "1.2.0-beta"
     }
   }
