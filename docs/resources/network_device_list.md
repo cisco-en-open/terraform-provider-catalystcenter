@@ -95,11 +95,11 @@ Optional:
 - `netconf_port` (String) Netconf Port of the device. cliTransport must be 'ssh' if netconf is provided. Netconf port is required for eWLC.
 - `password` (String, Sensitive) CLI Password of the device. Required if type is NETWORK_DEVICE.
 - `serial_number` (String) Serial Number of the Device. Required if extendedDiscoveryInfo is 'DISCOVER_WITH_CANNED_DATA'.
-- `snmp_auth_passphrase` (String) SNMPv3 auth passphrase of the device. Required if snmpMode is authNoPriv or authPriv.
-- `snmp_auth_protocol` (String) SNMPv3 auth protocol. Supported values: sha, md5. Required if snmpMode is authNoPriv or authPriv.
-- `snmp_mode` (String) SNMPv3 mode. Supported values: noAuthnoPriv, authNoPriv, authPriv. Required if snmpVersion is v3.
-- `snmp_priv_passphrase` (String) SNMPv3 priv passphrase. Required if snmpMode is authPriv.
-- `snmp_priv_protocol` (String) SNMPv3 priv protocol. Supported values: AES128. Required if snmpMode is authPriv.
+- `snmp_auth_passphrase` (String) SNMPv3 auth passphrase of the device. Required if snmpMode is AUTHNOPRIV or AUTHPRIV.
+- `snmp_auth_protocol` (String) SNMPv3 auth protocol. Supported values: sha, md5. Required if snmpMode is AUTHNOPRIV or AUTHPRIV.
+- `snmp_mode` (String) SNMPv3 mode. Supported values: AUTHPRIV, AUTHNOPRIV, NOAUTHNOPRIV. Required if snmpVersion is v3.
+- `snmp_priv_passphrase` (String) SNMPv3 priv passphrase. Required if snmpMode is AUTHPRIV.
+- `snmp_priv_protocol` (String) SNMPv3 priv protocol. Supported values: AES128. Required if snmpMode is AUTHPRIV.
 - `snmp_retry` (Number) SNMP retry count. Max value supported is 3. Default is Global SNMP retry (if exists) or 3.
 - `snmp_ro_community` (String) SNMP Read Community of the device. If snmpVersion is v2, at least one of snmpROCommunity and snmpRWCommunity is required.
 - `snmp_rw_community` (String) SNMP Write Community of the device. If snmpVersion is v2, at least one of snmpROCommunity and snmpRWCommunity is required.
