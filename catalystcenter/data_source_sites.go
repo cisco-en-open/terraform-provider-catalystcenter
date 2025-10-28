@@ -2,6 +2,7 @@ package catalystcenter
 
 import (
 	"context"
+	"fmt"
 
 	"log"
 
@@ -55,6 +56,12 @@ func dataSourceSites() *schema.Resource {
 `,
 				Type:     schema.TypeString,
 				Optional: true,
+			},
+
+			"count": &schema.Schema{
+				Description: `Total number of sites returned`,
+				Type:        schema.TypeInt,
+				Computed:    true,
 			},
 
 			"items": &schema.Schema{
@@ -244,11 +251,42 @@ func dataSourceSitesRead(ctx context.Context, d *schema.ResourceData, m interfac
 		log.Printf("[DEBUG] Retrieved response %+v", responseInterfaceToString(*response1))
 
 		vItems1 := flattenSiteDesignGetSitesItems(response1.Response)
+
+		// Check if results are empty when specific identifiers are provided
+		if vItems1 == nil || len(vItems1) == 0 {
+			if okNameHierarchy {
+				diags = append(diags, diagError(
+					"No site found with the specified criteria",
+					fmt.Errorf("no site found with name_hierarchy '%s'. Please verify the site hierarchy exists in Catalyst Center. Example format: 'Global/USA/San Jose/Building1'", vNameHierarchy.(string))))
+				return diags
+			}
+			if okName {
+				log.Printf("[WARN] No sites found matching name '%s'", vName.(string))
+			}
+		}
+
 		if err := d.Set("items", vItems1); err != nil {
 			diags = append(diags, diagError(
 				"Failure when setting GetSites response",
 				err))
 			return diags
+		}
+
+		// Set the count of returned items
+		if vItems1 != nil {
+			if err := d.Set("count", len(vItems1)); err != nil {
+				diags = append(diags, diagError(
+					"Failure when setting count",
+					err))
+				return diags
+			}
+		} else {
+			if err := d.Set("count", 0); err != nil {
+				diags = append(diags, diagError(
+					"Failure when setting count",
+					err))
+				return diags
+			}
 		}
 
 		d.SetId(getUnixTimeString())
