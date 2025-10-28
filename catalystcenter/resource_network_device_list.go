@@ -471,35 +471,36 @@ an inventory sync.
 							Computed: true,
 						},
 						"snmp_auth_passphrase": &schema.Schema{
-							Description: `SNMPv3 auth passphrase of the device. Required if snmpMode is authNoPriv or authPriv.
+							Description: `SNMPv3 auth passphrase of the device. Required if snmpMode is AUTHNOPRIV or AUTHPRIV.
 `,
 							Type:     schema.TypeString,
 							Optional: true,
 							Computed: true,
 						},
 						"snmp_auth_protocol": &schema.Schema{
-							Description: `SNMPv3 auth protocol. Supported values: sha, md5. Required if snmpMode is authNoPriv or authPriv.
+							Description: `SNMPv3 auth protocol. Supported values: sha, md5. Required if snmpMode is AUTHNOPRIV or AUTHPRIV.
 `,
 							Type:     schema.TypeString,
 							Optional: true,
 							Computed: true,
 						},
 						"snmp_mode": &schema.Schema{
-							Description: `SNMPv3 mode. Supported values: noAuthnoPriv, authNoPriv, authPriv. Required if snmpVersion is v3.
+							Description: `SNMPv3 mode. Supported values: AUTHPRIV, AUTHNOPRIV, NOAUTHNOPRIV. Required if snmpVersion is v3.
 `,
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							Computed:     true,
+							ValidateFunc: validateStringHasValueFunc([]string{"", "AUTHPRIV", "AUTHNOPRIV", "NOAUTHNOPRIV"}),
 						},
 						"snmp_priv_passphrase": &schema.Schema{
-							Description: `SNMPv3 priv passphrase. Required if snmpMode is authPriv.
+							Description: `SNMPv3 priv passphrase. Required if snmpMode is AUTHPRIV.
 `,
 							Type:     schema.TypeString,
 							Optional: true,
 							Computed: true,
 						},
 						"snmp_priv_protocol": &schema.Schema{
-							Description: `SNMPv3 priv protocol. Supported values: AES128. Required if snmpMode is authPriv.
+							Description: `SNMPv3 priv protocol. Supported values: AES128. Required if snmpMode is AUTHPRIV.
 `,
 							Type:     schema.TypeString,
 							Optional: true,
