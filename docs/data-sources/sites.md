@@ -15,19 +15,54 @@ It performs read operation on Site Design.
 
 ## Example Usage
 
+### Basic Usage - Lookup by Name Hierarchy
+
 ```terraform
 data "catalystcenter_sites" "example" {
-  provider         = catalystcenter
-  limit            = 1
-  name             = "string"
-  name_hierarchy   = "string"
-  offset           = 1
-  type             = "string"
-  units_of_measure = "string"
+  provider       = catalystcenter
+  name_hierarchy = "Global/USA/San Jose/Building1"
 }
 
-output "catalystcenter_sites_example" {
-  value = data.catalystcenter_sites.example.items
+# Access the first (and expected only) site
+output "site_id" {
+  value = data.catalystcenter_sites.example.items[0].id
+}
+```
+
+### Safe Usage - Check if Site Exists
+
+```terraform
+data "catalystcenter_sites" "example" {
+  provider       = catalystcenter
+  name_hierarchy = "Global/USA/San Jose/Building1"
+}
+
+# Use the count field to safely check if results were found
+output "site_exists" {
+  value = data.catalystcenter_sites.example.count > 0
+}
+
+# Conditionally access the site ID
+output "site_id" {
+  value = data.catalystcenter_sites.example.count > 0 ? data.catalystcenter_sites.example.items[0].id : "Site not found"
+}
+```
+
+### List All Sites with Pagination
+
+```terraform
+data "catalystcenter_sites" "all_sites" {
+  provider = catalystcenter
+  limit    = 100
+  offset   = 0
+}
+
+output "total_sites_returned" {
+  value = data.catalystcenter_sites.all_sites.count
+}
+
+output "all_site_names" {
+  value = [for site in data.catalystcenter_sites.all_sites.items : site.name]
 }
 ```
 
@@ -45,8 +80,11 @@ output "catalystcenter_sites_example" {
 
 ### Read-Only
 
+- `count` (Number) Total number of sites returned. Use this to check if any results were found before accessing items.
 - `id` (String) The ID of this resource.
 - `items` (List of Object) (see [below for nested schema](#nestedatt--items))
+
+**Note**: When using `name_hierarchy` to look up a specific site, the data source will return an error if no site is found with that hierarchy. This helps catch configuration errors early. For other query parameters, an empty list will be returned if no matches are found.
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
